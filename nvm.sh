@@ -2394,13 +2394,15 @@ nvm() {
       nvm_echo 'Usage:'
       nvm_echo '  nvm --help                                  Show this message'
       nvm_echo '  nvm --version                               Print out the installed version of nvm'
-      nvm_echo '  nvm install [-s] [<version>]                Download and install a <version>, [-s] from source. Uses .nvmrc if available'
-      nvm_echo '    --reinstall-packages-from=<version>       When installing, reinstall packages installed in <node|iojs|node version number>'
+      nvm_echo '  nvm install [-s] [<version>]              rc if available'
+      nvm_echo '    --reinstall-packages-from=<version>       When installing, reinstall packag  Download and install a <version>, [-s] from source. Uses .nvmes installed in <node|iojs|node version number>'
       nvm_echo '    --lts                                     When installing, only select from LTS (long-term support) versions'
       nvm_echo '    --lts=<LTS name>                          When installing, only select from versions for a specific LTS line'
       nvm_echo '    --skip-default-packages                   When installing, skip the default-packages file if it exists'
       nvm_echo '    --latest-npm                              After installing, attempt to upgrade to the latest working npm on the given node version'
       nvm_echo '    --no-progress                             Disable the progress bar on any downloads'
+      nvm_echo '    --alias=<name>                            After installing, set the alias specified to the version specified. (same as: nvm alias <name> <version>)'
+      nvm_echo '    --default                                 After installing, set default alias to the version specified. (same as: nvm alias default <version>)'
       nvm_echo '  nvm uninstall <version>                     Uninstall a version'
       nvm_echo '  nvm uninstall --lts                         Uninstall using automatic LTS (long-term support) alias `lts/*`, if available.'
       nvm_echo '  nvm uninstall --lts=<LTS name>              Uninstall using automatic alias for provided LTS line, if available.'
@@ -2576,6 +2578,7 @@ nvm() {
       nobinary=0
       noprogress=0
       local LTS
+      local ALIAS
       local NVM_UPGRADE_NPM
       NVM_UPGRADE_NPM=0
 
@@ -2613,6 +2616,14 @@ nvm() {
           ;;
           --latest-npm)
             NVM_UPGRADE_NPM=1
+            shift
+          ;;
+           --default)
+            ALIAS='default'
+            shift
+          ;;
+          --alias=*)
+            ALIAS="${1##--alias=}"
             shift
           ;;
           --reinstall-packages-from=*)
@@ -2795,6 +2806,9 @@ nvm() {
           nvm_ensure_default_set "lts/${LTS}"
         else
           nvm_ensure_default_set "${provided_version}"
+        fi
+        if [ -n "${ALIAS}" ]; then
+          nvm alias "${ALIAS}" "${provided_version}"
         fi
         return $?
       fi
