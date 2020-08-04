@@ -2345,16 +2345,11 @@ nvm() {
     return $?
   fi
 
-  local COMMAND
-  COMMAND="${1-}"
-  shift
-
-  # initialize local variables
-  local VERSION
-  local ADDITIONAL_PARAMETERS
-
-  case $COMMAND in
-    'help' | '--help')
+  argsList=("$@")
+  for i in "$@"
+  do
+    case $i in
+      'help'|'-help'|'--help')
       local NVM_IOJS_PREFIX
       NVM_IOJS_PREFIX="$(nvm_iojs_prefix)"
       local NVM_NODE_PREFIX
@@ -2434,8 +2429,20 @@ nvm() {
       nvm_echo 'Note:'
       nvm_echo '  to remove, delete, or uninstall nvm - just remove the `$NVM_DIR` folder (usually `~/.nvm`)'
       nvm_echo
-    ;;
+      return 0;
+      ;;
+    esac
+  done
 
+  local COMMAND
+  COMMAND="${1-}"
+  shift
+
+  # initialize local variables
+  local VERSION
+  local ADDITIONAL_PARAMETERS
+
+  case $COMMAND in
     "cache")
       case "${1-}" in
         dir) nvm_cache_dir ;;
