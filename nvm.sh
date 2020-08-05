@@ -2346,7 +2346,7 @@ nvm() {
   fi
 
   argsList=("$@")
-  for i in "$@"
+  for i in ${argsList[@]}
   do
     case $i in
       'help'|'-help'|'--help')
