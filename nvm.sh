@@ -2502,6 +2502,15 @@ nvm() {
         nvm_echo '    --silent                                  Silences stdout/stderr output when a version is omitted'
         nvm_echo '  nvm cache dir                               Display path to the cache directory for nvm'
         nvm_echo '  nvm cache clear                             Empty cache directory for nvm'
+        nvm_echo '  nvm set-colors [<color codes>]              Set five text colors using format "yMeBg". Color codes:' 
+        nvm_echo '                                                r/R = red / bold red'
+        nvm_echo '                                                g/G = green / bold green'
+        nvm_echo '                                                b/B = blue / bold blue'
+        nvm_echo '                                                c/C = cyan / bold cyan'
+        nvm_echo '                                                m/M = magenta / bold magenta'
+        nvm_echo '                                                y/Y = yellow / bold yellow'
+        nvm_echo '                                                k/K = black / bold black'
+        nvm_echo '                                                e/W = light grey / white'
         nvm_echo
         nvm_echo 'Example:'
         nvm_echo '  nvm install 8.0.0                     Install a specific version number'
@@ -2515,6 +2524,8 @@ nvm() {
         nvm_echo '  nvm use node                          Use the latest version'
         nvm_echo '  nvm install --lts                     Install the latest LTS version'
         nvm_echo '  nvm use --lts                         Use the latest LTS version'
+        nvm_echo
+        nvm_echo '  nvm set-colors cgYmW                  Set text colors to cyan, green, bold yellow, magenta and white'
         nvm_echo
         nvm_echo 'Note:'
         nvm_echo '  to remove, delete, or uninstall nvm - just remove the `$NVM_DIR` folder (usually `~/.nvm`)'
