@@ -2503,14 +2503,14 @@ nvm() {
         nvm_echo '  nvm cache dir                               Display path to the cache directory for nvm'
         nvm_echo '  nvm cache clear                             Empty cache directory for nvm'
         nvm_echo '  nvm set-colors [<color codes>]              Set five text colors using format "yMeBg". Color codes:' 
-        nvm_echo '                                                r/R = red / bold red'
-        nvm_echo '                                                g/G = green / bold green'
-        nvm_echo '                                                b/B = blue / bold blue'
-        nvm_echo '                                                c/C = cyan / bold cyan'
-        nvm_echo '                                                m/M = magenta / bold magenta'
-        nvm_echo '                                                y/Y = yellow / bold yellow'
-        nvm_echo '                                                k/K = black / bold black'
-        nvm_echo '                                                e/W = light grey / white'
+        echo -e "                                                \033[0;31m r\033[0m/\033[1;31mR\033[0m = \033[0;31mred\033[0m / \033[1;31mbold red\033[0m"
+        echo -e "                                                \033[0;32m g\033[0m/\033[1;32mG\033[0m = \033[0;32mgreen\033[0m / \033[1;32mbold green\033[0m"
+        echo -e "                                                \033[0;34m b\033[0m/\033[1;34mB\033[0m = \033[0;34mblue\033[0m / \033[1;34mbold blue\033[0m"
+        echo -e "                                                \033[0;36m c\033[0m/\033[1;36mC\033[0m = \033[0;36mcyan\033[0m / \033[1;36mbold cyan\033[0m"
+        echo -e "                                                \033[0;35m m\033[0m/\033[1;35mM\033[0m = \033[0;35mmagenta\033[0m / \033[1;35mbold magenta\033[0m"
+        echo -e "                                                \033[0;33m y\033[0m/\033[1;33mY\033[0m = \033[0;33myellow\033[0m / \033[1;33mbold yellow\033[0m"
+        echo -e "                                                \033[0;30m k\033[0m/\033[1;30mK\033[0m = \033[0;30mblack\033[0m / \033[1;30mbold black\033[0m"
+        echo -e "                                                \033[0;37m e\033[0m/\033[1;37mW\033[0m = \033[0;37mlight grey\033[0m / \033[1;37mwhite\033[0m"
         nvm_echo
         nvm_echo 'Example:'
         nvm_echo '  nvm install 8.0.0                     Install a specific version number'
