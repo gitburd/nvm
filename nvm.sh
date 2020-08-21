@@ -713,6 +713,29 @@ nvm_binary_available() {
   nvm_version_greater_than_or_equal_to "$(nvm_strip_iojs_prefix "${1-}")" v0.8.6
 }
 
+nvm_print_set_colors_help() {
+  if [ -z "${NVM_NO_COLORS}"  ] && nvm_has_colors
+  then
+    RED_INFO="\033[0;31m r\033[0m/\033[1;31mR\033[0m = \033[0;31mred\033[0m / \033[1;31mbold red\033[0m"
+    GREEN_INFO="\033[0;32m g\033[0m/\033[1;32mG\033[0m = \033[0;32mgreen\033[0m / \033[1;32mbold green\033[0m"
+    BLUE_INFO="\033[0;34m b\033[0m/\033[1;34mB\033[0m = \033[0;34mblue\033[0m / \033[1;34mbold blue\033[0m"
+    CYAN_INFO="\033[0;36m c\033[0m/\033[1;36mC\033[0m = \033[0;36mcyan\033[0m / \033[1;36mbold cyan\033[0m"
+    MAGENTA_INFO="\033[0;35m m\033[0m/\033[1;35mM\033[0m = \033[0;35mmagenta\033[0m / \033[1;35mbold magenta\033[0m"
+    YELLOW_INFO="\033[0;33m y\033[0m/\033[1;33mY\033[0m = \033[0;33myellow\033[0m / \033[1;33mbold yellow\033[0m"
+    BLACK_INFO="\033[0;30m k\033[0m/\033[1;30mK\033[0m = \033[0;30mblack\033[0m / \033[1;30mbold black\033[0m"
+    GREY_WHITE_INFO="\033[0;37m e\033[0m/\033[1;37mW\033[0m = \033[0;37mlight grey\033[0m / \033[1;37mwhite\033[0m"
+  else 
+    RED_INFO="r/R = red / bold red"
+    GREEN_INFO="g/G = green / bold green"
+    BLUE_INFO="b/B = blue / bold blue"
+    CYAN_INFO="c/C = cyan / bold cyan"
+    MAGENTA_INFO="m/M = magenta / bold magenta"
+    YELLOW_INFO="y/Y = yellow / bold yellow"
+    BLACK_INFO="k/K = black / bold black"
+    GREY_WHITE_INFO="e/W = light grey / white"
+  fi
+}
+
 nvm_print_formatted_alias() {
   local ALIAS
   ALIAS="${1-}"
@@ -2430,6 +2453,16 @@ nvm() {
   do
     case $i in
       '-h'|'help'|'--help')
+        NVM_NO_COLORS=""
+        for i in "$@"
+        do
+          if [[ $i == "--no-colors" ]]
+            then
+              NVM_NO_COLORS="${i}"
+              break 
+          fi
+        done
+        nvm_print_set_colors_help
         local NVM_IOJS_PREFIX
         NVM_IOJS_PREFIX="$(nvm_iojs_prefix)"
         local NVM_NODE_PREFIX
@@ -2502,15 +2535,16 @@ nvm() {
         nvm_echo '    --silent                                  Silences stdout/stderr output when a version is omitted'
         nvm_echo '  nvm cache dir                               Display path to the cache directory for nvm'
         nvm_echo '  nvm cache clear                             Empty cache directory for nvm'
-        nvm_echo '  nvm set-colors [<color codes>]              Set five text colors using format "yMeBg". Color codes:' 
-        echo -e "                                                \033[0;31m r\033[0m/\033[1;31mR\033[0m = \033[0;31mred\033[0m / \033[1;31mbold red\033[0m"
-        echo -e "                                                \033[0;32m g\033[0m/\033[1;32mG\033[0m = \033[0;32mgreen\033[0m / \033[1;32mbold green\033[0m"
-        echo -e "                                                \033[0;34m b\033[0m/\033[1;34mB\033[0m = \033[0;34mblue\033[0m / \033[1;34mbold blue\033[0m"
-        echo -e "                                                \033[0;36m c\033[0m/\033[1;36mC\033[0m = \033[0;36mcyan\033[0m / \033[1;36mbold cyan\033[0m"
-        echo -e "                                                \033[0;35m m\033[0m/\033[1;35mM\033[0m = \033[0;35mmagenta\033[0m / \033[1;35mbold magenta\033[0m"
-        echo -e "                                                \033[0;33m y\033[0m/\033[1;33mY\033[0m = \033[0;33myellow\033[0m / \033[1;33mbold yellow\033[0m"
-        echo -e "                                                \033[0;30m k\033[0m/\033[1;30mK\033[0m = \033[0;30mblack\033[0m / \033[1;30mbold black\033[0m"
-        echo -e "                                                \033[0;37m e\033[0m/\033[1;37mW\033[0m = \033[0;37mlight grey\033[0m / \033[1;37mwhite\033[0m"
+        nvm_echo '  nvm set-colors [<color codes>]              Set five text colors using format "yMeBg". Available when supported.' 
+        nvm_echo '                                               Color codes:' 
+        echo -e "                                                $RED_INFO"
+        echo -e "                                                $GREEN_INFO"
+        echo -e "                                                $BLUE_INFO"
+        echo -e "                                                $CYAN_INFO"
+        echo -e "                                                $MAGENTA_INFO"
+        echo -e "                                                $YELLOW_INFO"
+        echo -e "                                                $BLACK_INFO"
+        echo -e "                                                $GREY_WHITE_INFO"
         nvm_echo
         nvm_echo 'Example:'
         nvm_echo '  nvm install 8.0.0                     Install a specific version number'
