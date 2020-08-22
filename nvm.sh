@@ -713,6 +713,22 @@ nvm_binary_available() {
   nvm_version_greater_than_or_equal_to "$(nvm_strip_iojs_prefix "${1-}")" v0.8.6
 }
 
+
+nvm_set_colors() {
+  if [ nvm_has_colors ]
+  then
+    echo "In nvm_set_colors"
+    echo "$ 1 is $1"
+    COLOR1
+    COLOR2
+    COLOR3
+    COLOR4
+    COLOR5
+
+    NVM_COLOR_SCHEME
+  fi
+}
+
 nvm_print_set_colors_help() {
   if [ -z "${NVM_NO_COLORS}"  ] && nvm_has_colors
   then
@@ -724,7 +740,7 @@ nvm_print_set_colors_help() {
     YELLOW_INFO="\033[0;33m y\033[0m/\033[1;33mY\033[0m = \033[0;33myellow\033[0m / \033[1;33mbold yellow\033[0m"
     BLACK_INFO="\033[0;30m k\033[0m/\033[1;30mK\033[0m = \033[0;30mblack\033[0m / \033[1;30mbold black\033[0m"
     GREY_WHITE_INFO="\033[0;37m e\033[0m/\033[1;37mW\033[0m = \033[0;37mlight grey\033[0m / \033[1;37mwhite\033[0m"
-  else 
+  else
     RED_INFO="r/R = red / bold red"
     GREEN_INFO="g/G = green / bold green"
     BLUE_INFO="b/B = blue / bold blue"
@@ -2480,6 +2496,7 @@ nvm() {
         nvm_echo
         nvm_echo 'Usage:'
         nvm_echo '  nvm --help                                  Show this message'
+        nvm_echo '    --no-colors                               Suppress colored output'
         nvm_echo '  nvm --version                               Print out the installed version of nvm'
         nvm_echo '  nvm install [<version>]                     Download and install a <version>. Uses .nvmrc if available and version is omitted.'
         nvm_echo '   The following optional arguments, if provided, must appear directly after `nvm install`:'
@@ -2537,14 +2554,14 @@ nvm() {
         nvm_echo '  nvm cache clear                             Empty cache directory for nvm'
         nvm_echo '  nvm set-colors [<color codes>]              Set five text colors using format "yMeBg". Available when supported.' 
         nvm_echo '                                               Color codes:' 
-        echo -e "                                                $RED_INFO"
-        echo -e "                                                $GREEN_INFO"
-        echo -e "                                                $BLUE_INFO"
-        echo -e "                                                $CYAN_INFO"
-        echo -e "                                                $MAGENTA_INFO"
-        echo -e "                                                $YELLOW_INFO"
-        echo -e "                                                $BLACK_INFO"
-        echo -e "                                                $GREY_WHITE_INFO"
+        printf "                                                $RED_INFO\n"
+        printf "                                                $GREEN_INFO\n"
+        printf "                                                $BLUE_INFO\n"
+        printf "                                                $CYAN_INFO\n"
+        printf "                                                $MAGENTA_INFO\n"
+        printf "                                                $YELLOW_INFO\n"
+        printf "                                                $BLACK_INFO\n"
+        printf "                                                $GREY_WHITE_INFO\n"
         nvm_echo
         nvm_echo 'Example:'
         nvm_echo '  nvm install 8.0.0                     Install a specific version number'
@@ -3803,6 +3820,33 @@ nvm() {
       unset NVM_RC_VERSION NVM_NODEJS_ORG_MIRROR NVM_IOJS_ORG_MIRROR NVM_DIR \
         NVM_CD_FLAGS NVM_BIN NVM_INC NVM_MAKE_JOBS \
         >/dev/null 2>&1
+    ;;
+    "--set-colors")
+      # echo "Case is --set-colors and $ 1 is $1"
+      # shift
+      # echo "After shift, $ 1 is $1"
+      # echo $1
+      if [[ $1 =~ ^[rRgGbBcCyYmMkKeW]{1,}$ ]]; then
+        nvm_set_colors $1
+      else
+        if [ -n $1 ]; then
+          echo
+          echo "Please pass in color codes. Choose up to five from: rRgGbBcCyYmMkKeW"
+          nvm help
+          return 1
+        fi
+        if [ nvm_has_colors ]; then
+            echo
+            echo -e "Please use only \033[1;31mvalid color codes\033[0m"
+            echo
+            nvm help
+        else
+          echo "! X ! X ! X !"
+          echo "Please use only valid color codes"
+          echo
+          nvm help --no-colors
+        fi
+      fi
     ;;
     *)
       >&2 nvm --help
