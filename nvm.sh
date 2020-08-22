@@ -713,23 +713,43 @@ nvm_binary_available() {
   nvm_version_greater_than_or_equal_to "$(nvm_strip_iojs_prefix "${1-}")" v0.8.6
 }
 
-
 nvm_set_colors() {
   if [ nvm_has_colors ]
   then
     echo "In nvm_set_colors"
     echo "$ 1 is $1"
-    COLOR1
-    COLOR2
-    COLOR3
-    COLOR4
-    COLOR5
-
-    NVM_COLOR_SCHEME
+    COLORS=$1
+    COLOR_ONE="$(nvm_print_color_code ${COLORS:0:1})"
+    COLOR_TWO="$(nvm_print_color_code ${COLORS:1:1})"
+    COLOR_THREE="$(nvm_print_color_code ${COLORS:2:1})"
+    COLOR_FOUR="$(nvm_print_color_code ${COLORS:3:1})"
+    COLOR_FIVE="$(nvm_print_color_code ${COLORS:4:1})"
+    export NVM_COLORS="$COLOR_ONE:$COLOR_TWO:$COLOR_THREE:$COLOR_FOUR:$COLOR_FIVE"
   fi
 }
 
-nvm_print_set_colors_help() {
+nvm_print_color_code(){
+  case $1 in
+    r) echo "0;31m";;
+    R) echo "1;31m";;
+    g) echo "0;32m";;
+    G) echo "1;32m";;
+    b) echo "0;34m";;
+    B) echo "1;34m";;
+    c) echo "0;36m";;
+    C) echo "1;36m";;
+    m) echo "0;35m";;
+    M) echo "1;35m";;
+    y) echo "0;33m";;
+    Y) echo "1;33m";;
+    k) echo "0;30m";;
+    K) echo "1;30m";;
+    e) echo "0;37m";;
+    W) echo "1;37m";;
+  esac
+}
+
+nvm_format_help_message_colors() {
   if [ -z "${NVM_NO_COLORS}"  ] && nvm_has_colors
   then
     RED_INFO="\033[0;31m r\033[0m/\033[1;31mR\033[0m = \033[0;31mred\033[0m / \033[1;31mbold red\033[0m"
@@ -2478,7 +2498,7 @@ nvm() {
               break 
           fi
         done
-        nvm_print_set_colors_help
+        nvm_format_help_message_colors
         local NVM_IOJS_PREFIX
         NVM_IOJS_PREFIX="$(nvm_iojs_prefix)"
         local NVM_NODE_PREFIX
