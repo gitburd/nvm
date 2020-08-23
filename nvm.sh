@@ -70,11 +70,11 @@ nvm_command_info() {
 }
 
 nvm_has_colors() {
-  local NVM_COLORS
+  local NVM_NUM_COLORS
   if nvm_has tput; then
-    NVM_COLORS="$(tput -T "${TERM:-vt100}" colors)"
+    NVM_NUM_COLORS="$(tput -T "${TERM:-vt100}" colors)"
   fi
-  [ "${NVM_COLORS:--1}" -ge 8 ]
+  [ "${NVM_NUM_COLORS:--1}" -ge 8 ]
 }
 
 nvm_curl_libz_support() {
@@ -716,8 +716,7 @@ nvm_binary_available() {
 nvm_set_colors() {
   if [ nvm_has_colors ]
   then
-    echo "In nvm_set_colors"
-    echo "$ 1 is $1"
+    echo "Setting colors to: $1"
     COLORS=$1
     COLOR_ONE="$(nvm_print_color_code ${COLORS:0:1})"
     COLOR_TWO="$(nvm_print_color_code ${COLORS:1:1})"
@@ -725,6 +724,19 @@ nvm_set_colors() {
     COLOR_FOUR="$(nvm_print_color_code ${COLORS:3:1})"
     COLOR_FIVE="$(nvm_print_color_code ${COLORS:4:1})"
     export NVM_COLORS="$COLOR_ONE:$COLOR_TWO:$COLOR_THREE:$COLOR_FOUR:$COLOR_FIVE"
+  fi
+}
+
+nvm_get_colors() {
+  if [ $NVM_COLORS ]; then
+    COLOR_ONE="$(cut -d':' -f1 <<<$NVM_COLORS)"
+    COLOR_TWO="$(cut -d':' -f2 <<<$NVM_COLORS)"
+    COLOR_THREE="$(cut -d':' -f3 <<<$NVM_COLORS)"
+    COLOR_FOUR="$(cut -d':' -f4 <<<$NVM_COLORS)"
+    COLOR_FIVE="$(cut -d':' -f5 <<<$NVM_COLORS)"
+    echo "Got colors from NVM_COLORS: $COLOR_ONE $COLOR_TWO $COLOR_THREE $COLOR_FOUR $COLOR_FIVE"
+    # what to do if less than 5 colors
+    # where do these functions get called
   fi
 }
 
@@ -3605,6 +3617,7 @@ nvm() {
       local NVM_NO_COLORS
       ALIAS='--'
       TARGET='--'
+
       while [ $# -gt 0 ]; do
         case "${1-}" in
           --) ;;
@@ -3836,9 +3849,10 @@ nvm() {
         nvm_node_version_has_solaris_binary nvm_iojs_version_has_solaris_binary \
         nvm_curl_libz_support nvm_command_info nvm_is_zsh nvm_stdout_is_terminal \
         nvm_npmrc_bad_news_bears \
+        nvm_get_colors nvm_set_colors nvm_print_color_code nvm_format_help_message_colors \
         >/dev/null 2>&1
       unset NVM_RC_VERSION NVM_NODEJS_ORG_MIRROR NVM_IOJS_ORG_MIRROR NVM_DIR \
-        NVM_CD_FLAGS NVM_BIN NVM_INC NVM_MAKE_JOBS \
+        NVM_CD_FLAGS NVM_BIN NVM_INC NVM_MAKE_JOBS NVM_COLORS \
         >/dev/null 2>&1
     ;;
     "--set-colors")
