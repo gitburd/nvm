@@ -718,23 +718,23 @@ nvm_set_colors() {
   then
     echo "Setting colors to: $1"
     COLORS=$1
-    COLOR_ONE="$(nvm_print_color_code ${COLORS:0:1})"
-    COLOR_TWO="$(nvm_print_color_code ${COLORS:1:1})"
-    COLOR_THREE="$(nvm_print_color_code ${COLORS:2:1})"
-    COLOR_FOUR="$(nvm_print_color_code ${COLORS:3:1})"
-    COLOR_FIVE="$(nvm_print_color_code ${COLORS:4:1})"
-    export NVM_COLORS="$COLOR_ONE:$COLOR_TWO:$COLOR_THREE:$COLOR_FOUR:$COLOR_FIVE"
+    ACTIVE_COLOR="$(nvm_print_color_code ${COLORS:0:1})"
+    INSTALLED_COLOR="$(nvm_print_color_code ${COLORS:1:1})"
+    LTS_COLOR="$(nvm_print_color_code ${COLORS:2:1})"
+    NOT_INSTALLED_COLOR="$(nvm_print_color_code ${COLORS:3:1})"
+    DEFAULT_COLOR="$(nvm_print_color_code ${COLORS:4:1})"
+    export NVM_COLORS="$ACTIVE_COLOR:$INSTALLED_COLOR:$LTS_COLOR:$NOT_INSTALLED_COLOR:$DEFAULT_COLOR"
   fi
 }
 
 nvm_get_colors() {
   if [ $NVM_COLORS ]; then
-    COLOR_ONE="$(cut -d':' -f1 <<<$NVM_COLORS)"
-    COLOR_TWO="$(cut -d':' -f2 <<<$NVM_COLORS)"
-    COLOR_THREE="$(cut -d':' -f3 <<<$NVM_COLORS)"
-    COLOR_FOUR="$(cut -d':' -f4 <<<$NVM_COLORS)"
-    COLOR_FIVE="$(cut -d':' -f5 <<<$NVM_COLORS)"
-    echo "Got colors from NVM_COLORS: $COLOR_ONE $COLOR_TWO $COLOR_THREE $COLOR_FOUR $COLOR_FIVE"
+    ACTIVE_COLOR="$(cut -d':' -f1 <<<$NVM_COLORS)"
+    INSTALLED_COLOR="$(cut -d':' -f2 <<<$NVM_COLORS)"
+    LTS_COLOR="$(cut -d':' -f3 <<<$NVM_COLORS)"
+    NOT_INSTALLED_COLOR="$(cut -d':' -f4 <<<$NVM_COLORS)"
+    DEFAULT_COLOR="$(cut -d':' -f5 <<<$NVM_COLORS)"
+    echo "Got colors from NVM_COLORS: $ACTIVE_COLOR $INSTALLED_COLOR $LTS_COLOR $NOT_INSTALLED_COLOR $DEFAULT_COLOR"
     # what to do if less than 5 colors
     # where do these functions get called
   fi
@@ -810,26 +810,26 @@ nvm_print_formatted_alias() {
   if [ -z "${NVM_NO_COLORS}" ] && nvm_has_colors; then
     ARROW='\033[0;90m->\033[0m'
     if [ "_${DEFAULT}" = '_true' ]; then
-      NEWLINE=' \033[0;37m(default)\033[0m\n'
+      NEWLINE=" \033[${DEFAULT_COLOR}(default)\033[0m\n"
     fi
     if [ "_${VERSION}" = "_${NVM_CURRENT-}" ]; then
-      ALIAS_FORMAT='\033[0;32m%s\033[0m'
-      DEST_FORMAT='\033[0;32m%s\033[0m'
-      VERSION_FORMAT='\033[0;32m%s\033[0m'
+      ALIAS_FORMAT="\033[${ACTIVE_COLOR}%s\033[0m"
+      DEST_FORMAT="\033[${ACTIVE_COLOR}%s\033[0m"
+      VERSION_FORMAT="\033[${ACTIVE_COLOR}%s\033[0m"
     elif nvm_is_version_installed "${VERSION}"; then
-      ALIAS_FORMAT='\033[0;34m%s\033[0m'
-      DEST_FORMAT='\033[0;34m%s\033[0m'
-      VERSION_FORMAT='\033[0;34m%s\033[0m'
+      ALIAS_FORMAT="\033[${INSTALLED_COLOR}%s\033[0m"
+      DEST_FORMAT="\033[${INSTALLED_COLOR}%s\033[0m"
+      VERSION_FORMAT="\033[${INSTALLED_COLOR}%s\033[0m"
     elif [ "${VERSION}" = '∞' ] || [ "${VERSION}" = 'N/A' ]; then
-      ALIAS_FORMAT='\033[1;31m%s\033[0m'
-      DEST_FORMAT='\033[1;31m%s\033[0m'
-      VERSION_FORMAT='\033[1;31m%s\033[0m'
+      ALIAS_FORMAT="\033[${NOT_INSTALLED_COLOR}m%s\033[0m"
+      DEST_FORMAT="\033[${NOT_INSTALLED_COLOR}m%s\033[0m"
+      VERSION_FORMAT="\033[${NOT_INSTALLED_COLOR}m%s\033[0m"
     fi
     if [ "_${NVM_LTS-}" = '_true' ]; then
-      ALIAS_FORMAT='\033[1;33m%s\033[0m'
+      ALIAS_FORMAT="\033[${LTS_COLOR}%s\033[0m"
     fi
     if [ "_${DEST%/*}" = "_lts" ]; then
-      DEST_FORMAT='\033[1;33m%s\033[0m'
+      DEST_FORMAT="\033[${LTS_COLOR}%s\033[0m"
     fi
   elif [ "_${VERSION}" != '_∞' ] && [ "_${VERSION}" != '_N/A' ]; then
     VERSION_FORMAT='%s *'
@@ -3617,6 +3617,8 @@ nvm() {
       local NVM_NO_COLORS
       ALIAS='--'
       TARGET='--'
+
+      nvm_get_colors
 
       while [ $# -gt 0 ]; do
         case "${1-}" in
