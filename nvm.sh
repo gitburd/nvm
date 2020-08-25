@@ -716,13 +716,13 @@ nvm_binary_available() {
 nvm_set_colors() {
   if [ nvm_has_colors ]
   then
-    echo "Setting colors to: $1"
     COLORS=$1
     INSTALLED_COLOR="$(nvm_print_color_code ${COLORS:0:1})"
     LTS_AND_SYSTEM_COLOR="$(nvm_print_color_code ${COLORS:1:1})"
     CURRENT_COLOR="$(nvm_print_color_code ${COLORS:2:1})"
     NOT_INSTALLED_COLOR="$(nvm_print_color_code ${COLORS:3:1})"
     DEFAULT_COLOR="$(nvm_print_color_code ${COLORS:4:1})"
+    printf "Setting colors to: \033[${INSTALLED_COLOR}${COLORS:0:1}\033[${LTS_AND_SYSTEM_COLOR}${COLORS:1:1}\033[${CURRENT_COLOR}${COLORS:2:1}\033[${NOT_INSTALLED_COLOR}${COLORS:3:1}\033[${DEFAULT_COLOR}${COLORS:4:1}\033[0m"
     export NVM_COLORS="$INSTALLED_COLOR:$LTS_AND_SYSTEM_COLOR:$CURRENT_COLOR:$NOT_INSTALLED_COLOR:$DEFAULT_COLOR"
   fi
 }
@@ -735,8 +735,6 @@ nvm_get_colors() {
     NOT_INSTALLED_COLOR="$(cut -d':' -f4 <<<$NVM_COLORS)"
     DEFAULT_COLOR="$(cut -d':' -f5 <<<$NVM_COLORS)"
     LTS_COLOR="$(echo $SYSTEM_COLOR | tr '0;' '1;')"
-    
-    echo "Got colors from NVM_COLORS: $INSTALLED_COLOR:$SYSTEM_COLOR:$CURRENT_COLOR:$NOT_INSTALLED_COLOR:$DEFAULT_COLOR:$LTS_COLOR"
     # what to do if less than 5 colors
     # where do these functions get called
   else 
@@ -1578,8 +1576,7 @@ nvm_print_versions() {
           LTS="${LTS##Latest }"
           LTS_LENGTH="${#LTS}"
           if [ "${NVM_HAS_COLORS-}" = '1' ]; then
-          echo "AC ${CURRENT_COLOR}"
-            LTS_FORMAT="  \\033[1;${CURRENT_COLOR}%${LTS_LENGTH}s\\033[0m"
+            LTS_FORMAT="  \\033[${LTS_COLOR}%${LTS_LENGTH}s\\033[0m"
           else
             LTS_FORMAT="  %${LTS_LENGTH}s"
           fi
@@ -1587,7 +1584,7 @@ nvm_print_versions() {
         *)
           LTS_LENGTH="${#LTS}"
           if [ "${NVM_HAS_COLORS-}" = '1' ]; then
-            LTS_FORMAT="  \\033[0;37m%${LTS_LENGTH}s\\033[0m"
+            LTS_FORMAT="  \\033[${SYSTEM_COLOR}%${LTS_LENGTH}s\\033[0m"
           else
             LTS_FORMAT="  %${LTS_LENGTH}s"
           fi
