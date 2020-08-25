@@ -735,8 +735,6 @@ nvm_get_colors() {
     NOT_INSTALLED_COLOR="$(cut -d':' -f4 <<<$NVM_COLORS)"
     DEFAULT_COLOR="$(cut -d':' -f5 <<<$NVM_COLORS)"
     LTS_COLOR="$(echo $SYSTEM_COLOR | tr '0;' '1;')"
-    # what to do if less than 5 colors
-    # where do these functions get called
   else 
     CURRENT_COLOR="0;32m"
     INSTALLED_COLOR="0;34m"
@@ -3866,22 +3864,18 @@ nvm() {
         >/dev/null 2>&1
     ;;
     "--set-colors")
-      # echo "Case is --set-colors and $ 1 is $1"
-      # shift
-      # echo "After shift, $ 1 is $1"
-      # echo $1
-      if [[ $1 =~ ^[rRgGbBcCyYmMkKeW]{1,}$ ]]; then
+      if [[ ($1 =~ ^[rRgGbBcCyYmMkKeW]{1,}$) && ${#1} -eq 5 ]]; then
         nvm_set_colors $1
       else
         if [ -n $1 ]; then
           echo
-          echo "Please pass in color codes. Choose up to five from: rRgGbBcCyYmMkKeW"
+          echo "Please pass in five color codes. Choose from: rRgGbBcCyYmMkKeW"
           nvm help
           return 1
         fi
         if [ nvm_has_colors ]; then
             echo
-            echo -e "Please use only \033[1;31mvalid color codes\033[0m"
+            printf "Please use only \033[1;31mvalid color codes\033[0m"
             echo
             nvm help
         else
