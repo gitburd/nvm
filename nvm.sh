@@ -714,21 +714,27 @@ nvm_binary_available() {
 }
 
 nvm_set_colors() {
-  if [ nvm_has_colors ]
-  then
+  if nvm_has_colors; then
+    local COLORS
+    local INSTALLED_COLOR
+    local LTS_AND_SYSTEM_COLOR
+    local CURRENT_COLOR
+    local NOT_INSTALLED_COLOR
+    local DEFAULT_COLOR
+
     COLORS=$1
     INSTALLED_COLOR="$(nvm_print_color_code ${COLORS:0:1})"
     LTS_AND_SYSTEM_COLOR="$(nvm_print_color_code ${COLORS:1:1})"
     CURRENT_COLOR="$(nvm_print_color_code ${COLORS:2:1})"
     NOT_INSTALLED_COLOR="$(nvm_print_color_code ${COLORS:3:1})"
     DEFAULT_COLOR="$(nvm_print_color_code ${COLORS:4:1})"
-    printf "Setting colors to: \033[${INSTALLED_COLOR}${COLORS:0:1}\033[${LTS_AND_SYSTEM_COLOR}${COLORS:1:1}\033[${CURRENT_COLOR}${COLORS:2:1}\033[${NOT_INSTALLED_COLOR}${COLORS:3:1}\033[${DEFAULT_COLOR}${COLORS:4:1}\033[0m"
-    export NVM_COLORS="$INSTALLED_COLOR:$LTS_AND_SYSTEM_COLOR:$CURRENT_COLOR:$NOT_INSTALLED_COLOR:$DEFAULT_COLOR"
+    nvm_echo "Setting colors to: \033[${INSTALLED_COLOR}${COLORS:0:1}\033[${LTS_AND_SYSTEM_COLOR}${COLORS:1:1}\033[${CURRENT_COLOR}${COLORS:2:1}\033[${NOT_INSTALLED_COLOR}${COLORS:3:1}\033[${DEFAULT_COLOR}${COLORS:4:1}\033[0m"
+    NVM_COLORS="${INSTALLED_COLOR}:${LTS_AND_SYSTEM_COLOR}:${CURRENT_COLOR}:${NOT_INSTALLED_COLOR}:${DEFAULT_COLOR}"
   fi
 }
 
 nvm_get_colors() {
-  if [ $NVM_COLORS ]; then
+   if [ -n "${NVM_COLORS-}" ]; then
     INSTALLED_COLOR="$(cut -d':' -f1 <<<$NVM_COLORS)"
     SYSTEM_COLOR="$(cut -d':' -f2 <<<$NVM_COLORS)"
     CURRENT_COLOR="$(cut -d':' -f3 <<<$NVM_COLORS)"
@@ -745,8 +751,8 @@ nvm_get_colors() {
   fi
 }
 
-nvm_print_color_code(){
-  case $1 in
+nvm_print_color_code() {
+  case ${1} in
     r) echo "0;31m";;
     R) echo "1;31m";;
     g) echo "0;32m";;
@@ -767,8 +773,7 @@ nvm_print_color_code(){
 }
 
 nvm_format_help_message_colors() {
-  if [ -z "${NVM_NO_COLORS}"  ] && nvm_has_colors
-  then
+  if [ -z "${NVM_NO_COLORS-}"  ] && nvm_has_colors; then
     RED_INFO="\033[0;31m r\033[0m/\033[1;31mR\033[0m = \033[0;31mred\033[0m / \033[1;31mbold red\033[0m"
     GREEN_INFO="\033[0;32m g\033[0m/\033[1;32mG\033[0m = \033[0;32mgreen\033[0m / \033[1;32mbold green\033[0m"
     BLUE_INFO="\033[0;34m b\033[0m/\033[1;34mB\033[0m = \033[0;34mblue\033[0m / \033[1;34mbold blue\033[0m"
@@ -2509,7 +2514,7 @@ nvm() {
         NVM_NO_COLORS=""
         for i in "$@"
         do
-          if [[ $i == "--no-colors" ]]
+          if [ "${i}" = '--no-colors' ]
             then
               NVM_NO_COLORS="${i}"
               break 
