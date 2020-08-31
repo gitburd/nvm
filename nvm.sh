@@ -723,23 +723,26 @@ nvm_set_colors() {
     local DEFAULT_COLOR
 
     COLORS=$1
-    INSTALLED_COLOR="$(nvm_print_color_code ${COLORS:0:1})"
-    LTS_AND_SYSTEM_COLOR="$(nvm_print_color_code ${COLORS:1:1})"
-    CURRENT_COLOR="$(nvm_print_color_code ${COLORS:2:1})"
-    NOT_INSTALLED_COLOR="$(nvm_print_color_code ${COLORS:3:1})"
-    DEFAULT_COLOR="$(nvm_print_color_code ${COLORS:4:1})"
-    nvm_echo "Setting colors to: \033[${INSTALLED_COLOR}${COLORS:0:1}\033[${LTS_AND_SYSTEM_COLOR}${COLORS:1:1}\033[${CURRENT_COLOR}${COLORS:2:1}\033[${NOT_INSTALLED_COLOR}${COLORS:3:1}\033[${DEFAULT_COLOR}${COLORS:4:1}\033[0m"
-    NVM_COLORS="${INSTALLED_COLOR}:${LTS_AND_SYSTEM_COLOR}:${CURRENT_COLOR}:${NOT_INSTALLED_COLOR}:${DEFAULT_COLOR}"
+    INSTALLED_COLOR="${COLORS:0:1}"
+    LTS_AND_SYSTEM_COLOR="${COLORS:1:1}"
+    CURRENT_COLOR="${COLORS:2:1}"
+    NOT_INSTALLED_COLOR="${COLORS:3:1}"
+    DEFAULT_COLOR="${COLORS:4:1}"
+    
+    CONFIRMATION_MESSAGE="Setting colors to: \033[$(nvm_print_color_code ${INSTALLED_COLOR}) ${INSTALLED_COLOR}\033[$(nvm_print_color_code ${LTS_AND_SYSTEM_COLOR}) ${LTS_AND_SYSTEM_COLOR}\033[$(nvm_print_color_code ${CURRENT_COLOR}) ${CURRENT_COLOR}\033[$(nvm_print_color_code ${NOT_INSTALLED_COLOR}) ${NOT_INSTALLED_COLOR}\033[$(nvm_print_color_code ${DEFAULT_COLOR}) ${DEFAULT_COLOR}\033[0m"
+    printf "$CONFIRMATION_MESSAGE"
+    export NVM_COLORS=$1
   fi
 }
 
 nvm_get_colors() {
-   if [ -n "${NVM_COLORS-}" ]; then
-    INSTALLED_COLOR="$(cut -d':' -f1 <<<$NVM_COLORS)"
-    SYSTEM_COLOR="$(cut -d':' -f2 <<<$NVM_COLORS)"
-    CURRENT_COLOR="$(cut -d':' -f3 <<<$NVM_COLORS)"
-    NOT_INSTALLED_COLOR="$(cut -d':' -f4 <<<$NVM_COLORS)"
-    DEFAULT_COLOR="$(cut -d':' -f5 <<<$NVM_COLORS)"
+  if [ -n "${NVM_COLORS-}" ]; then
+    INSTALLED_COLOR="$(nvm_print_color_code ${NVM_COLORS:0:1})"
+    SYSTEM_COLOR="$(nvm_print_color_code ${NVM_COLORS:1:1})"
+    CURRENT_COLOR="$(nvm_print_color_code ${NVM_COLORS:2:1})"
+    NOT_INSTALLED_COLOR="$(nvm_print_color_code ${NVM_COLORS:3:1})"
+    DEFAULT_COLOR="$(nvm_print_color_code ${NVM_COLORS:4:1})"
+
     LTS_COLOR="$(echo $SYSTEM_COLOR | tr '0;' '1;')"
   else 
     CURRENT_COLOR="0;32m"
