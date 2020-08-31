@@ -728,7 +728,7 @@ nvm_set_colors() {
     CURRENT_COLOR="${COLORS:2:1}"
     NOT_INSTALLED_COLOR="${COLORS:3:1}"
     DEFAULT_COLOR="${COLORS:4:1}"
-    
+
     CONFIRMATION_MESSAGE="Setting colors to: \033[$(nvm_print_color_code ${INSTALLED_COLOR}) ${INSTALLED_COLOR}\033[$(nvm_print_color_code ${LTS_AND_SYSTEM_COLOR}) ${LTS_AND_SYSTEM_COLOR}\033[$(nvm_print_color_code ${CURRENT_COLOR}) ${CURRENT_COLOR}\033[$(nvm_print_color_code ${NOT_INSTALLED_COLOR}) ${NOT_INSTALLED_COLOR}\033[$(nvm_print_color_code ${DEFAULT_COLOR}) ${DEFAULT_COLOR}\033[0m"
     printf "$CONFIRMATION_MESSAGE"
     export NVM_COLORS=$1
@@ -744,7 +744,7 @@ nvm_get_colors() {
     DEFAULT_COLOR="$(nvm_print_color_code ${NVM_COLORS:4:1})"
 
     LTS_COLOR="$(echo $SYSTEM_COLOR | tr '0;' '1;')"
-  else 
+  else
     CURRENT_COLOR="0;32m"
     INSTALLED_COLOR="0;34m"
     LTS_COLOR="1;33m"
@@ -2520,7 +2520,7 @@ nvm() {
           if [ "${i}" = '--no-colors' ]
             then
               NVM_NO_COLORS="${i}"
-              break 
+              break
           fi
         done
         nvm_format_help_message_colors
@@ -2597,8 +2597,8 @@ nvm() {
         nvm_echo '    --silent                                  Silences stdout/stderr output when a version is omitted'
         nvm_echo '  nvm cache dir                               Display path to the cache directory for nvm'
         nvm_echo '  nvm cache clear                             Empty cache directory for nvm'
-        nvm_echo '  nvm set-colors [<color codes>]              Set five text colors using format "yMeBg". Available when supported.' 
-        nvm_echo '                                               Color codes:' 
+        nvm_echo '  nvm set-colors [<color codes>]              Set five text colors using format "yMeBg". Available when supported.'
+        nvm_echo '                                               Color codes:'
         printf "                                                $RED_INFO\n"
         printf "                                                $GREEN_INFO\n"
         printf "                                                $BLUE_INFO\n"
@@ -3872,16 +3872,16 @@ nvm() {
         >/dev/null 2>&1
     ;;
     "--set-colors")
-      if [[ ($1 =~ ^[rRgGbBcCyYmMkKeW]{1,}$) && ${#1} -eq 5 ]]; then
+      if [[ ($1 =~ ^[rRgGbBcCyYmMkKeW]{1,}$) && (${#1} -eq 5) ]]; then
         nvm_set_colors $1
       else
-        if [ -n $1 ]; then
+        if [ -n "$1" ]; then
           echo
           echo "Please pass in five color codes. Choose from: rRgGbBcCyYmMkKeW"
           nvm help
           return 1
         fi
-        if [ nvm_has_colors ]; then
+        if nvm_has_colors; then
             echo
             printf "Please use only \033[1;31mvalid color codes\033[0m"
             echo
