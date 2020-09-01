@@ -3528,6 +3528,7 @@ nvm() {
       local NVM_LTS
       local PATTERN
       local NVM_NO_COLORS
+      nvm_get_colors
       while [ $# -gt 0 ]; do
         case "${1-}" in
           --) ;;
