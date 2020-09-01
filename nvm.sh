@@ -733,7 +733,7 @@ nvm_set_colors() {
     NOT_INSTALLED_COLOR="${COLORS:3:1}"
     DEFAULT_COLOR="${COLORS:4:1}"
 
-    CONFIRMATION_MESSAGE="Setting colors to: \033[$(nvm_print_color_code ${INSTALLED_COLOR}) ${INSTALLED_COLOR}\033[$(nvm_print_color_code ${LTS_AND_SYSTEM_COLOR}) ${LTS_AND_SYSTEM_COLOR}\033[$(nvm_print_color_code ${CURRENT_COLOR}) ${CURRENT_COLOR}\033[$(nvm_print_color_code ${NOT_INSTALLED_COLOR}) ${NOT_INSTALLED_COLOR}\033[$(nvm_print_color_code ${DEFAULT_COLOR}) ${DEFAULT_COLOR}\033[0m"
+    CONFIRMATION_MESSAGE="Setting colors to: \033[$(nvm_print_color_code "${INSTALLED_COLOR}") ${INSTALLED_COLOR}\033[$(nvm_print_color_code "${LTS_AND_SYSTEM_COLOR}") ${LTS_AND_SYSTEM_COLOR}\033[$(nvm_print_color_code "${CURRENT_COLOR}") ${CURRENT_COLOR}\033[$(nvm_print_color_code "${NOT_INSTALLED_COLOR}") ${NOT_INSTALLED_COLOR}\033[$(nvm_print_color_code "${DEFAULT_COLOR}") ${DEFAULT_COLOR}\033[0m"
     nvm_echo_with_colors "$CONFIRMATION_MESSAGE"
     export NVM_COLORS=$1
   fi
@@ -741,13 +741,13 @@ nvm_set_colors() {
 
 nvm_get_colors() {
   if [ -n "${NVM_COLORS-}" ]; then
-    NVM_INSTALLED_COLOR="$(nvm_print_color_code ${NVM_COLORS:0:1})"
-    NVM_SYSTEM_COLOR="$(nvm_print_color_code ${NVM_COLORS:1:1})"
-    NVM_CURRENT_COLOR="$(nvm_print_color_code ${NVM_COLORS:2:1})"
-    NVM_NOT_INSTALLED_COLOR="$(nvm_print_color_code ${NVM_COLORS:3:1})"
-    NVM_DEFAULT_COLOR="$(nvm_print_color_code ${NVM_COLORS:4:1})"
+    NVM_INSTALLED_COLOR=$(nvm_print_color_code "${NVM_COLORS:0:1}")
+    NVM_SYSTEM_COLOR=$(nvm_print_color_code "${NVM_COLORS:1:1}")
+    NVM_CURRENT_COLOR=$(nvm_print_color_code "${NVM_COLORS:2:1}")
+    NVM_NOT_INSTALLED_COLOR=$(nvm_print_color_code "${NVM_COLORS:3:1}")
+    NVM_DEFAULT_COLOR=$(nvm_print_color_code "${NVM_COLORS:4:1}")
 
-    NVM_LTS_COLOR="$(echo $NVM_SYSTEM_COLOR | tr '0;' '1;')"
+    NVM_LTS_COLOR=$(echo "$NVM_SYSTEM_COLOR" | tr '0;' '1;')
   else
     NVM_CURRENT_COLOR="0;32m"
     NVM_INSTALLED_COLOR="0;34m"
@@ -2520,11 +2520,11 @@ nvm() {
     case $i in
       '-h'|'help'|'--help')
         NVM_NO_COLORS=""
-        for i in "$@"
+        for j in "$@"
         do
-          if [ "${i}" = '--no-colors' ]
+          if [ "${j}" = '--no-colors' ]
             then
-              NVM_NO_COLORS="${i}"
+              NVM_NO_COLORS="${j}"
               break
           fi
         done
