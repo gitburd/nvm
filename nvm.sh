@@ -741,64 +741,64 @@ nvm_set_colors() {
 
 nvm_get_colors() {
   if [ -n "${NVM_COLORS-}" ]; then
-    NVM_INSTALLED_COLOR=$(nvm_print_color_code $(echo $NVM_COLORS | awk '{ NVM_INSTALLED_COLOR=substr($0, 0, 1); print NVM_INSTALLED_COLOR; }'))
-    NVM_SYSTEM_COLOR=$(nvm_print_color_code $(echo $NVM_COLORS | awk '{ NVM_INSTALLED_COLOR=substr($0, 1, 1); print NVM_INSTALLED_COLOR; }'))
-    NVM_CURRENT_COLOR=$(nvm_print_color_code $(echo $NVM_COLORS | awk '{ NVM_INSTALLED_COLOR=substr($0, 2, 1); print NVM_INSTALLED_COLOR; }'))
-    NVM_NOT_INSTALLED_COLOR=$(nvm_print_color_code $(echo $NVM_COLORS | awk '{ NVM_INSTALLED_COLOR=substr($0, 3, 1); print NVM_INSTALLED_COLOR; }'))
-    NVM_DEFAULT_COLOR=$(nvm_print_color_code $(echo $NVM_COLORS | awk '{ NVM_INSTALLED_COLOR=substr($0, 4, 1); print NVM_INSTALLED_COLOR; }'))
+    NVM_INSTALLED_COLOR=$(nvm_print_color_code $(echo "$NVM_COLORS" | awk '{ NVM_INSTALLED_COLOR=substr($0, 1, 1); print NVM_INSTALLED_COLOR; }'))
+    NVM_SYSTEM_COLOR=$(nvm_print_color_code $(echo "$NVM_COLORS" | awk '{ NVM_SYSTEM_COLOR=substr($0, 2, 1); print NVM_SYSTEM_COLOR; }'))
+    NVM_CURRENT_COLOR=$(nvm_print_color_code $(echo "$NVM_COLORS" | awk '{ NVM_CURRENT_COLOR=substr($0, 3, 1); print NVM_CURRENT_COLOR; }'))
+    NVM_NOT_INSTALLED_COLOR=$(nvm_print_color_code $(echo "$NVM_COLORS" | awk '{ NVM_NOT_INSTALLED_COLOR=substr($0, 4, 1); print NVM_NOT_INSTALLED_COLOR; }'))
+    NVM_DEFAULT_COLOR=$(nvm_print_color_code $(echo "$NVM_COLORS" | awk '{ NVM_DEFAULT_COLOR=substr($0, 5, 1); print NVM_DEFAULT_COLOR; }'))
 
-    NVM_LTS_COLOR=$(echo "$NVM_SYSTEM_COLOR" | tr '0;' '1;')
+    NVM_LTS_COLOR=$(nvm_echo "$NVM_SYSTEM_COLOR" | command tr '0;' '1;')
   else
-    NVM_CURRENT_COLOR="0;32m"
-    NVM_INSTALLED_COLOR="0;34m"
-    NVM_LTS_COLOR="1;33m"
-    NVM_NOT_INSTALLED_COLOR="0;31m"
-    NVM_DEFAULT_COLOR="0;37m"
-    NVM_SYSTEM_COLOR="0;33m"
+    NVM_CURRENT_COLOR='0;32m'
+    NVM_INSTALLED_COLOR='0;34m'
+    NVM_LTS_COLOR='1;33m'
+    NVM_NOT_INSTALLED_COLOR='0;31m'
+    NVM_DEFAULT_COLOR='0;37m'
+    NVM_SYSTEM_COLOR='0;33m'
   fi
 }
 
 nvm_print_color_code() {
   case ${1} in
-    r) echo "0;31m";;
-    R) echo "1;31m";;
-    g) echo "0;32m";;
-    G) echo "1;32m";;
-    b) echo "0;34m";;
-    B) echo "1;34m";;
-    c) echo "0;36m";;
-    C) echo "1;36m";;
-    m) echo "0;35m";;
-    M) echo "1;35m";;
-    y) echo "0;33m";;
-    Y) echo "1;33m";;
-    k) echo "0;30m";;
-    K) echo "1;30m";;
-    e) echo "0;37m";;
-    W) echo "1;37m";;
-    *) echo "Invalid color code"; return 1;;
+    r) nvm_echo '0;31m';;
+    R) nvm_echo '1;31m';;
+    g) nvm_echo '0;32m';;
+    G) nvm_echo '1;32m';;
+    b) nvm_echo '0;34m';;
+    B) nvm_echo '1;34m';;
+    c) nvm_echo '0;36m';;
+    C) nvm_echo '1;36m';;
+    m) nvm_echo '0;35m';;
+    M) nvm_echo '1;35m';;
+    y) nvm_echo '0;33m';;
+    Y) nvm_echo '1;33m';;
+    k) nvm_echo '0;30m';;
+    K) nvm_echo '1;30m';;
+    e) nvm_echo '0;37m';;
+    W) nvm_echo '1;37m';;
+    *) nvm_echo 'Invalid color code'; return 1;;
   esac
 }
 
 nvm_format_help_message_colors() {
   if [ -z "${NVM_NO_COLORS-}"  ] && nvm_has_colors; then
-    RED_INFO="\033[0;31m r\033[0m/\033[1;31mR\033[0m = \033[0;31mred\033[0m / \033[1;31mbold red\033[0m"
-    GREEN_INFO="\033[0;32m g\033[0m/\033[1;32mG\033[0m = \033[0;32mgreen\033[0m / \033[1;32mbold green\033[0m"
-    BLUE_INFO="\033[0;34m b\033[0m/\033[1;34mB\033[0m = \033[0;34mblue\033[0m / \033[1;34mbold blue\033[0m"
-    CYAN_INFO="\033[0;36m c\033[0m/\033[1;36mC\033[0m = \033[0;36mcyan\033[0m / \033[1;36mbold cyan\033[0m"
-    MAGENTA_INFO="\033[0;35m m\033[0m/\033[1;35mM\033[0m = \033[0;35mmagenta\033[0m / \033[1;35mbold magenta\033[0m"
-    YELLOW_INFO="\033[0;33m y\033[0m/\033[1;33mY\033[0m = \033[0;33myellow\033[0m / \033[1;33mbold yellow\033[0m"
-    BLACK_INFO="\033[0;30m k\033[0m/\033[1;30mK\033[0m = \033[0;30mblack\033[0m / \033[1;30mbold black\033[0m"
-    GREY_WHITE_INFO="\033[0;37m e\033[0m/\033[1;37mW\033[0m = \033[0;37mlight grey\033[0m / \033[1;37mwhite\033[0m"
+    NVM_RED_INFO='\033[0;31m r\033[0m/\033[1;31mR\033[0m = \033[0;31mred\033[0m / \033[1;31mbold red\033[0m'
+    NVM_GREEN_INFO='\033[0;32m g\033[0m/\033[1;32mG\033[0m = \033[0;32mgreen\033[0m / \033[1;32mbold green\033[0m'
+    NVM_BLUE_INFO='\033[0;34m b\033[0m/\033[1;34mB\033[0m = \033[0;34mblue\033[0m / \033[1;34mbold blue\033[0m'
+    NVM_CYAN_INFO='\033[0;36m c\033[0m/\033[1;36mC\033[0m = \033[0;36mcyan\033[0m / \033[1;36mbold cyan\033[0m'
+    NVM_MAGENTA_INFO='\033[0;35m m\033[0m/\033[1;35mM\033[0m = \033[0;35mmagenta\033[0m / \033[1;35mbold magenta\033[0m'
+    NVM_YELLOW_INFO='\033[0;33m y\033[0m/\033[1;33mY\033[0m = \033[0;33myellow\033[0m / \033[1;33mbold yellow\033[0m'
+    NVM_BLACK_INFO='\033[0;30m k\033[0m/\033[1;30mK\033[0m = \033[0;30mblack\033[0m / \033[1;30mbold black\033[0m'
+    NVM_GREY_WHITE_INFO='\033[0;37m e\033[0m/\033[1;37mW\033[0m = \033[0;37mlight grey\033[0m / \033[1;37mwhite\033[0m'
   else
-    RED_INFO="r/R = red / bold red"
-    GREEN_INFO="g/G = green / bold green"
-    BLUE_INFO="b/B = blue / bold blue"
-    CYAN_INFO="c/C = cyan / bold cyan"
-    MAGENTA_INFO="m/M = magenta / bold magenta"
-    YELLOW_INFO="y/Y = yellow / bold yellow"
-    BLACK_INFO="k/K = black / bold black"
-    GREY_WHITE_INFO="e/W = light grey / white"
+    NVM_RED_INFO='r/R = red / bold red'
+    NVM_GREEN_INFO='g/G = green / bold green'
+    NVM_BLUE_INFO='b/B = blue / bold blue'
+    NVM_CYAN_INFO='c/C = cyan / bold cyan'
+    NVM_MAGENTA_INFO='m/M = magenta / bold magenta'
+    NVM_YELLOW_INFO='y/Y = yellow / bold yellow'
+    NVM_BLACK_INFO='k/K = black / bold black'
+    NVM_GREY_WHITE_INFO='e/W = light grey / white'
   fi
 }
 
@@ -2606,14 +2606,14 @@ nvm() {
         nvm_echo '                                               Defaults are:'
         nvm_echo '                                                  gbYre'
         nvm_echo '                                               Color codes:'
-        nvm_echo_with_colors "                                                $RED_INFO"
-        nvm_echo_with_colors "                                                $GREEN_INFO"
-        nvm_echo_with_colors "                                                $BLUE_INFO"
-        nvm_echo_with_colors "                                                $CYAN_INFO"
-        nvm_echo_with_colors "                                                $MAGENTA_INFO"
-        nvm_echo_with_colors "                                                $YELLOW_INFO"
-        nvm_echo_with_colors "                                                $BLACK_INFO"
-        nvm_echo_with_colors "                                                $GREY_WHITE_INFO"
+        nvm_echo_with_colors "                                                $NVM_RED_INFO"
+        nvm_echo_with_colors "                                                $NVM_GREEN_INFO"
+        nvm_echo_with_colors "                                                $NVM_BLUE_INFO"
+        nvm_echo_with_colors "                                                $NVM_CYAN_INFO"
+        nvm_echo_with_colors "                                                $NVM_MAGENTA_INFO"
+        nvm_echo_with_colors "                                                $NVM_YELLOW_INFO"
+        nvm_echo_with_colors "                                                $NVM_BLACK_INFO"
+        nvm_echo_with_colors "                                                $NVM_GREY_WHITE_INFO"
         nvm_echo
         nvm_echo 'Example:'
         nvm_echo '  nvm install 8.0.0                     Install a specific version number'
