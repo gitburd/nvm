@@ -3879,7 +3879,7 @@ nvm() {
         >/dev/null 2>&1
     ;;
     "--set-colors")
-      if [[ ($1 =~ ^[rRgGbBcCyYmMkKeW]{1,}$) && (${#1} -eq 5) ]]; then
+      if [ "${#1}" -eq 5 ] && echo "$1" | grep -E "^[:rRgGbBcCyYmMkKeW:]{1,}$" 1>/dev/null; then
         nvm_set_colors "$1"
       else
         if [ -n "$1" ]; then
