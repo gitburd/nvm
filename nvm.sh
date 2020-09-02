@@ -780,6 +780,7 @@ nvm_print_color_code() {
 
 nvm_format_help_message_colors() {
   if [ -z "${NVM_NO_COLORS-}"  ] && nvm_has_colors; then
+    NVM_INITIAL_COLOR_INFO='\033[0;32m g\033[0m \033[0;34m b\033[0m \033[0;33m y\033[0m \033[0;31m r\033[0m \033[0;37m e\033[0m'
     NVM_RED_INFO='\033[0;31m r\033[0m/\033[1;31mR\033[0m = \033[0;31mred\033[0m / \033[1;31mbold red\033[0m'
     NVM_GREEN_INFO='\033[0;32m g\033[0m/\033[1;32mG\033[0m = \033[0;32mgreen\033[0m / \033[1;32mbold green\033[0m'
     NVM_BLUE_INFO='\033[0;34m b\033[0m/\033[1;34mB\033[0m = \033[0;34mblue\033[0m / \033[1;34mbold blue\033[0m'
@@ -789,6 +790,7 @@ nvm_format_help_message_colors() {
     NVM_BLACK_INFO='\033[0;30m k\033[0m/\033[1;30mK\033[0m = \033[0;30mblack\033[0m / \033[1;30mbold black\033[0m'
     NVM_GREY_WHITE_INFO='\033[0;37m e\033[0m/\033[1;37mW\033[0m = \033[0;37mlight grey\033[0m / \033[1;37mwhite\033[0m'
   else
+    NVM_INITIAL_COLOR_INFO='gbYre'
     NVM_RED_INFO='r/R = red / bold red'
     NVM_GREEN_INFO='g/G = green / bold green'
     NVM_BLUE_INFO='b/B = blue / bold blue'
@@ -2601,8 +2603,8 @@ nvm() {
         nvm_echo '  nvm cache dir                               Display path to the cache directory for nvm'
         nvm_echo '  nvm cache clear                             Empty cache directory for nvm'
         nvm_echo '  nvm set-colors [<color codes>]              Set five text colors using format "yMeBg". Available when supported.'
-        nvm_echo '                                               Defaults are:'
-        nvm_echo '                                                  gbYre'
+        nvm_echo '                                               Initial colors are:'
+        nvm_echo_with_colors "                                                  $NVM_INITIAL_COLOR_INFO"
         nvm_echo '                                               Color codes:'
         nvm_echo_with_colors "                                                $NVM_RED_INFO"
         nvm_echo_with_colors "                                                $NVM_GREEN_INFO"
@@ -3874,7 +3876,11 @@ nvm() {
         nvm_get_colors nvm_set_colors nvm_print_color_code nvm_format_help_message_colors \
         >/dev/null 2>&1
       unset NVM_RC_VERSION NVM_NODEJS_ORG_MIRROR NVM_IOJS_ORG_MIRROR NVM_DIR \
-        NVM_CD_FLAGS NVM_BIN NVM_INC NVM_MAKE_JOBS NVM_COLORS \
+        NVM_CD_FLAGS NVM_BIN NVM_INC NVM_MAKE_JOBS NVM_COLORS NVM_RED_INFO NVM_GREEN_INFO \
+        NVM_BLUE_INFO NVM_CYAN_INFO NVM_MAGENTA_INFO NVM_YELLOW_INFO NVM_BLACK_INFO \
+        NVM_GREY_WHITE_INFO NVM_INSTALLED_COLOR NVM_SYSTEM_COLOR NVM_CURRENT_COLOR \
+        NVM_NOT_INSTALLED_COLOR NVM_DEFAULT_COLOR NVM_LTS_COLOR \
+        CONFIRMATION_MESSAGE NVM_INITIAL_COLOR_INFO \
         >/dev/null 2>&1
     ;;
     "--set-colors")
