@@ -719,7 +719,6 @@ nvm_binary_available() {
 
 nvm_set_colors() {
   if nvm_has_colors; then
-    local COLORS
     local INSTALLED_COLOR
     local LTS_AND_SYSTEM_COLOR
     local CURRENT_COLOR
