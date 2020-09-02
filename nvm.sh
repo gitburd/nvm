@@ -726,12 +726,11 @@ nvm_set_colors() {
     local NOT_INSTALLED_COLOR
     local DEFAULT_COLOR
 
-    COLORS=$1
-    INSTALLED_COLOR=${COLORS:0:1}
-    LTS_AND_SYSTEM_COLOR=${COLORS:1:1}
-    CURRENT_COLOR=${COLORS:2:1}
-    NOT_INSTALLED_COLOR=${COLORS:3:1}
-    DEFAULT_COLOR=${COLORS:4:1}
+    INSTALLED_COLOR="$(echo "$1" | awk '{ INSTALLED_COLOR=substr($0, 1, 1); print INSTALLED_COLOR; }')"
+    LTS_AND_SYSTEM_COLOR="$(echo "$1" | awk '{ LTS_AND_SYSTEM_COLOR=substr($0, 2, 1); print LTS_AND_SYSTEM_COLOR; }')"
+    CURRENT_COLOR="$(echo "$1" | awk '{ CURRENT_COLOR=substr($0, 3, 1); print CURRENT_COLOR; }')"
+    NOT_INSTALLED_COLOR="$(echo "$1" | awk '{ NOT_INSTALLED_COLOR=substr($0, 4, 1); print NOT_INSTALLED_COLOR; }')"
+    DEFAULT_COLOR="$(echo "$1" | awk '{ DEFAULT_COLOR=substr($0, 5, 1); print DEFAULT_COLOR; }')"
 
     CONFIRMATION_MESSAGE="Setting colors to: \033[$(nvm_print_color_code "${INSTALLED_COLOR}") ${INSTALLED_COLOR}\033[$(nvm_print_color_code "${LTS_AND_SYSTEM_COLOR}") ${LTS_AND_SYSTEM_COLOR}\033[$(nvm_print_color_code "${CURRENT_COLOR}") ${CURRENT_COLOR}\033[$(nvm_print_color_code "${NOT_INSTALLED_COLOR}") ${NOT_INSTALLED_COLOR}\033[$(nvm_print_color_code "${DEFAULT_COLOR}") ${DEFAULT_COLOR}\033[0m"
     nvm_echo_with_colors "$CONFIRMATION_MESSAGE"
