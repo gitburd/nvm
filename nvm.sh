@@ -741,11 +741,11 @@ nvm_set_colors() {
 
 nvm_get_colors() {
   if [ -n "${NVM_COLORS-}" ]; then
-    NVM_INSTALLED_COLOR=$(nvm_print_color_code $(echo "$NVM_COLORS" | awk '{ NVM_INSTALLED_COLOR=substr($0, 1, 1); print NVM_INSTALLED_COLOR; }'))
-    NVM_SYSTEM_COLOR=$(nvm_print_color_code $(echo "$NVM_COLORS" | awk '{ NVM_SYSTEM_COLOR=substr($0, 2, 1); print NVM_SYSTEM_COLOR; }'))
-    NVM_CURRENT_COLOR=$(nvm_print_color_code $(echo "$NVM_COLORS" | awk '{ NVM_CURRENT_COLOR=substr($0, 3, 1); print NVM_CURRENT_COLOR; }'))
-    NVM_NOT_INSTALLED_COLOR=$(nvm_print_color_code $(echo "$NVM_COLORS" | awk '{ NVM_NOT_INSTALLED_COLOR=substr($0, 4, 1); print NVM_NOT_INSTALLED_COLOR; }'))
-    NVM_DEFAULT_COLOR=$(nvm_print_color_code $(echo "$NVM_COLORS" | awk '{ NVM_DEFAULT_COLOR=substr($0, 5, 1); print NVM_DEFAULT_COLOR; }'))
+    NVM_INSTALLED_COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ NVM_INSTALLED_COLOR=substr($0, 1, 1); print NVM_INSTALLED_COLOR; }')")
+    NVM_SYSTEM_COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ NVM_SYSTEM_COLOR=substr($0, 2, 1); print NVM_SYSTEM_COLOR; }')")
+    NVM_CURRENT_COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ NVM_CURRENT_COLOR=substr($0, 3, 1); print NVM_CURRENT_COLOR; }')")
+    NVM_NOT_INSTALLED_COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ NVM_NOT_INSTALLED_COLOR=substr($0, 4, 1); print NVM_NOT_INSTALLED_COLOR; }')")
+    NVM_DEFAULT_COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ NVM_DEFAULT_COLOR=substr($0, 5, 1); print NVM_DEFAULT_COLOR; }')")
 
     NVM_LTS_COLOR=$(nvm_echo "$NVM_SYSTEM_COLOR" | command tr '0;' '1;')
   else
