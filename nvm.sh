@@ -12,6 +12,13 @@
 
 NVM_SCRIPT_SOURCE="$_"
 
+NVM_CURRENT_COLOR='0;32m'
+NVM_INSTALLED_COLOR='0;34m'
+NVM_LTS_COLOR='1;33m'
+NVM_NOT_INSTALLED_COLOR='0;31m'
+NVM_DEFAULT_COLOR='0;37m'
+NVM_SYSTEM_COLOR='0;33m'
+
 nvm_is_zsh() {
   [ -n "${ZSH_VERSION-}" ]
 }
@@ -746,13 +753,6 @@ nvm_get_colors() {
     NVM_DEFAULT_COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ NVM_DEFAULT_COLOR=substr($0, 5, 1); print NVM_DEFAULT_COLOR; }')")
 
     NVM_LTS_COLOR=$(nvm_echo "$NVM_SYSTEM_COLOR" | command tr '0;' '1;')
-  else
-    NVM_CURRENT_COLOR='0;32m'
-    NVM_INSTALLED_COLOR='0;34m'
-    NVM_LTS_COLOR='1;33m'
-    NVM_NOT_INSTALLED_COLOR='0;31m'
-    NVM_DEFAULT_COLOR='0;37m'
-    NVM_SYSTEM_COLOR='0;33m'
   fi
 }
 
