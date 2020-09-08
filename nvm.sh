@@ -1547,9 +1547,11 @@ nvm_print_versions() {
   local LTS
   local FORMAT
   local NVM_CURRENT
-  local NVM_LATEST_LTS_COLOR=$(nvm_echo "${NVM_CURRENT_COLOR}" | command tr '0;' '1;')
-  local NVM_OLD_LTS_COLOR="${NVM_DEFAULT_COLOR}"
+  local NVM_LATEST_LTS_COLOR
+  local NVM_OLD_LTS_COLOR
   NVM_CURRENT=$(nvm_ls_current)
+  NVM_LATEST_LTS_COLOR=$(nvm_echo "${NVM_CURRENT_COLOR}" | command tr '0;' '1;')
+  NVM_OLD_LTS_COLOR="${NVM_DEFAULT_COLOR}"
   local NVM_HAS_COLORS
   if [ -z "${NVM_NO_COLORS-}" ] && nvm_has_colors; then
     NVM_HAS_COLORS=1
