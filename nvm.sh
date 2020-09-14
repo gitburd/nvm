@@ -43,6 +43,10 @@ nvm_err() {
   >&2 nvm_echo "$@"
 }
 
+nvm_err_with_colors() {
+  >&2 nvm_echo_with_colors "$@"
+}
+
 nvm_grep() {
   GREP_OPTIONS='' command grep "$@"
 }
@@ -738,8 +742,8 @@ nvm_set_colors() {
     NOT_INSTALLED_COLOR="$(echo "$1" | awk '{ NOT_INSTALLED_COLOR=substr($0, 4, 1); print NOT_INSTALLED_COLOR; }')"
     DEFAULT_COLOR="$(echo "$1" | awk '{ DEFAULT_COLOR=substr($0, 5, 1); print DEFAULT_COLOR; }')"
 
-    CONFIRMATION_MESSAGE="Setting colors to: \033[$(nvm_print_color_code "${INSTALLED_COLOR}") ${INSTALLED_COLOR}\033[$(nvm_print_color_code "${LTS_AND_SYSTEM_COLOR}") ${LTS_AND_SYSTEM_COLOR}\033[$(nvm_print_color_code "${CURRENT_COLOR}") ${CURRENT_COLOR}\033[$(nvm_print_color_code "${NOT_INSTALLED_COLOR}") ${NOT_INSTALLED_COLOR}\033[$(nvm_print_color_code "${DEFAULT_COLOR}") ${DEFAULT_COLOR}\033[0m"
-    nvm_echo_with_colors "$CONFIRMATION_MESSAGE"
+    nvm_echo_with_colors "Setting colors to: \033[$(nvm_print_color_code "${INSTALLED_COLOR}") ${INSTALLED_COLOR}\033[$(nvm_print_color_code "${LTS_AND_SYSTEM_COLOR}") ${LTS_AND_SYSTEM_COLOR}\033[$(nvm_print_color_code "${CURRENT_COLOR}") ${CURRENT_COLOR}\033[$(nvm_print_color_code "${NOT_INSTALLED_COLOR}") ${NOT_INSTALLED_COLOR}\033[$(nvm_print_color_code "${DEFAULT_COLOR}") ${DEFAULT_COLOR}\033[0m"
+
     export NVM_COLORS=$1
   fi
 }
@@ -3884,31 +3888,22 @@ nvm() {
         NVM_CD_FLAGS NVM_BIN NVM_INC NVM_MAKE_JOBS NVM_COLORS NVM_RED_INFO NVM_GREEN_INFO \
         NVM_BLUE_INFO NVM_CYAN_INFO NVM_MAGENTA_INFO NVM_YELLOW_INFO NVM_BLACK_INFO \
         NVM_GREY_WHITE_INFO NVM_INSTALLED_COLOR NVM_SYSTEM_COLOR NVM_CURRENT_COLOR \
-        NVM_NOT_INSTALLED_COLOR NVM_DEFAULT_COLOR NVM_LTS_COLOR \
-        CONFIRMATION_MESSAGE NVM_INITIAL_COLOR_INFO \
+        NVM_NOT_INSTALLED_COLOR NVM_DEFAULT_COLOR NVM_LTS_COLOR NVM_INITIAL_COLOR_INFO \
         >/dev/null 2>&1
     ;;
     "--set-colors")
       if [ "${#1}" -eq 5 ] && echo "$1" | grep -E "^[:rRgGbBcCyYmMkKeW:]{1,}$" 1>/dev/null; then
         nvm_set_colors "$1"
+      elif nvm_has_colors; then
+        echo
+        nvm_err_with_colors "Please pass in five \033[1;31mvalid color codes\033[0m. Choose from: rRgGbBcCyYmMkKeW"
+        nvm help
+        return 1
       else
-        if [ -n "$1" ]; then
-          echo
-          echo "Please pass in five color codes. Choose from: rRgGbBcCyYmMkKeW"
-          nvm help
-          return 1
-        fi
-        if nvm_has_colors; then
-            echo
-            printf "Please use only \033[1;31mvalid color codes\033[0m"
-            echo
-            nvm help
-        else
-          echo "! X ! X ! X !"
-          echo "Please use only valid color codes"
-          echo
-          nvm help --no-colors
-        fi
+        nvm_err "Please use only valid color codes"
+        echo
+        nvm help --no-colors
+        return 1
       fi
     ;;
     *)
