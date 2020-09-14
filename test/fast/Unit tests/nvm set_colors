@@ -16,14 +16,14 @@ OUTPUT=$NVM_COLORS
 EXPECTED_OUTPUT="rgbyc"
 [ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "NVM_SET_COLORS failed with valid input; got $(echo ">$OUTPUT<") expected $(echo ">$EXPECTED_OUTPUT<")"
 
-# test invalid 4 colors 
+# test invalid 4 colors
 OUTPUT="$(echo $(nvm --set-colors rgby) | awk '{ OUTPUT=substr($0, 1, 62); print OUTPUT; }')"
-EXPECTED_OUTPUT="Please pass in five color codes. Choose from: rRgGbBcCyYmMkKeW"
+EXPECTED_OUTPUT="Please pass in five valid color codes. Choose from: rRgGbBcCyYmMkKeW"
 [ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "NVM_SET_COLORS did not fail with invalid input; got $(echo ">$OUTPUT<") expected $(echo ">$EXPECTED_OUTPUT<")"
 
-# test invalid color codes 
+# test invalid color codes
 OUTPUT="$(echo $(nvm --set-colors p3gq7) | awk '{ OUTPUT=substr($0, 1, 62); print OUTPUT; }')"
-EXPECTED_OUTPUT="Please pass in five color codes. Choose from: rRgGbBcCyYmMkKeW"
+EXPECTED_OUTPUT="Please pass in five valid color codes. Choose from: rRgGbBcCyYmMkKeW"
 [ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "NVM_SET_COLORS did not fail with invalid input; got $(echo ">$OUTPUT<") expected $(echo ">$EXPECTED_OUTPUT<")"
 
 cleanup

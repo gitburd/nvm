@@ -3900,7 +3900,7 @@ nvm() {
         nvm help
         return 1
       else
-        nvm_err "Please use only valid color codes"
+        nvm_err "Color is not supported on this system."
         echo
         nvm help --no-colors
         return 1
