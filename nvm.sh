@@ -3896,7 +3896,8 @@ nvm() {
         nvm_set_colors "$1"
       elif nvm_has_colors; then
         echo
-        nvm_err_with_colors "Please pass in five \033[1;31mvalid color codes\033[0m. Choose from: rRgGbBcCyYmMkKeW"
+        # nvm_err_with_colors "Please pass in five \033[1;31mvalid color codes\033[0m. Choose from: rRgGbBcCyYmMkKeW"
+        echo -e "Please pass in five \033[1;31mvalid color codes\033[0m. Choose from: rRgGbBcCyYmMkKeW"
         nvm help
         return 1
       else
