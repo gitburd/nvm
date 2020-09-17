@@ -760,19 +760,6 @@ nvm_get_colors() {
         return 1
         ;;
     esac
-  else
-    case $1 in
-      1) COLOR='0;32m';;
-      2) COLOR='0;34m';;
-      3) COLOR='0;33m';;
-      4) COLOR='0;31m';;
-      5) COLOR='0;37m';;
-      6) COLOR='1;33m';;
-      *)
-        nvm_err "Invalid color index, $1"
-        return 1
-        ;;
-    esac
   fi
   echo $COLOR
 }
@@ -844,12 +831,21 @@ nvm_print_formatted_alias() {
   local NVM_DEFAULT_COLOR
   local NVM_LTS_COLOR
 
-  NVM_CURRENT_COLOR=$(nvm_get_colors 1)
-  NVM_INSTALLED_COLOR=$(nvm_get_colors 2)
-  NVM_SYSTEM_COLOR=$(nvm_get_colors 3)
-  NVM_NOT_INSTALLED_COLOR=$(nvm_get_colors 4)
-  NVM_DEFAULT_COLOR=$(nvm_get_colors 5)
-  NVM_LTS_COLOR=$(nvm_get_colors 6)
+  if [ -n "${NVM_COLORS}" ]; then
+    NVM_CURRENT_COLOR=$(nvm_get_colors 1)
+    NVM_INSTALLED_COLOR=$(nvm_get_colors 2)
+    NVM_SYSTEM_COLOR=$(nvm_get_colors 3)
+    NVM_NOT_INSTALLED_COLOR=$(nvm_get_colors 4)
+    NVM_DEFAULT_COLOR=$(nvm_get_colors 5)
+    NVM_LTS_COLOR=$(nvm_get_colors 6)
+  else
+    NVM_CURRENT_COLOR='0;32m'
+    NVM_INSTALLED_COLOR='0;34m'
+    NVM_SYSTEM_COLOR='0;33m'
+    NVM_NOT_INSTALLED_COLOR='0;31m'
+    NVM_DEFAULT_COLOR='0;37m'
+    NVM_LTS_COLOR='1;33m'
+  fi
 
   ALIAS_FORMAT='%s'
   DEST_FORMAT='%s'
@@ -1593,12 +1589,21 @@ nvm_print_versions() {
   local NVM_DEFAULT_COLOR
   local NVM_LTS_COLOR
 
-  NVM_CURRENT_COLOR=$(nvm_get_colors 1)
-  NVM_INSTALLED_COLOR=$(nvm_get_colors 2)
-  NVM_SYSTEM_COLOR=$(nvm_get_colors 3)
-  NVM_NOT_INSTALLED_COLOR=$(nvm_get_colors 4)
-  NVM_DEFAULT_COLOR=$(nvm_get_colors 5)
-  NVM_LTS_COLOR=$(nvm_get_colors 6)
+  if [ -n "${NVM_COLORS}" ]; then
+    NVM_CURRENT_COLOR=$(nvm_get_colors 1)
+    NVM_INSTALLED_COLOR=$(nvm_get_colors 2)
+    NVM_SYSTEM_COLOR=$(nvm_get_colors 3)
+    NVM_NOT_INSTALLED_COLOR=$(nvm_get_colors 4)
+    NVM_DEFAULT_COLOR=$(nvm_get_colors 5)
+    NVM_LTS_COLOR=$(nvm_get_colors 6)
+  else
+    NVM_CURRENT_COLOR='0;32m'
+    NVM_INSTALLED_COLOR='0;34m'
+    NVM_SYSTEM_COLOR='0;33m'
+    NVM_NOT_INSTALLED_COLOR='0;31m'
+    NVM_DEFAULT_COLOR='0;37m'
+    NVM_LTS_COLOR='1;33m'
+  fi
 
   NVM_CURRENT=$(nvm_ls_current)
   NVM_LATEST_LTS_COLOR=$(nvm_echo "${NVM_CURRENT_COLOR}" | command tr '0;' '1;')
