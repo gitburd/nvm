@@ -12,13 +12,6 @@
 
 NVM_SCRIPT_SOURCE="$_"
 
-NVM_CURRENT_COLOR='0;32m'
-NVM_INSTALLED_COLOR='0;34m'
-NVM_LTS_COLOR='1;33m'
-NVM_NOT_INSTALLED_COLOR='0;31m'
-NVM_DEFAULT_COLOR='0;37m'
-NVM_SYSTEM_COLOR='0;33m'
-
 nvm_is_zsh() {
   [ -n "${ZSH_VERSION-}" ]
 }
@@ -749,15 +742,39 @@ nvm_set_colors() {
 }
 
 nvm_get_colors() {
+  local COLOR
+  local SYS_COLOR
   if [ -n "${NVM_COLORS-}" ]; then
-    NVM_INSTALLED_COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ NVM_INSTALLED_COLOR=substr($0, 1, 1); print NVM_INSTALLED_COLOR; }')")
-    NVM_SYSTEM_COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ NVM_SYSTEM_COLOR=substr($0, 2, 1); print NVM_SYSTEM_COLOR; }')")
-    NVM_CURRENT_COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ NVM_CURRENT_COLOR=substr($0, 3, 1); print NVM_CURRENT_COLOR; }')")
-    NVM_NOT_INSTALLED_COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ NVM_NOT_INSTALLED_COLOR=substr($0, 4, 1); print NVM_NOT_INSTALLED_COLOR; }')")
-    NVM_DEFAULT_COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ NVM_DEFAULT_COLOR=substr($0, 5, 1); print NVM_DEFAULT_COLOR; }')")
-
-    NVM_LTS_COLOR=$(nvm_echo "$NVM_SYSTEM_COLOR" | command tr '0;' '1;')
+    case $1 in
+      1) COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ COLOR=substr($0, 1, 1); print COLOR; }')");;
+      2) COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ COLOR=substr($0, 2, 1); print COLOR; }')");;
+      3) COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ COLOR=substr($0, 3, 1); print COLOR; }')");;
+      4) COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ COLOR=substr($0, 4, 1); print COLOR; }')");;
+      5) COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ COLOR=substr($0, 5, 1); print COLOR; }')");;
+      6)
+        SYS_COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ COLOR=substr($0, 3, 1); print COLOR; }')")
+        COLOR=$(nvm_echo "$SYS_COLOR" | command tr '0;' '1;')
+        ;;
+      *)
+        nvm_err "Invalid color index, $1"
+        return 1
+        ;;
+    esac
+  else
+    case $1 in
+      1) COLOR='0;32m';;
+      2) COLOR='0;34m';;
+      3) COLOR='0;33m';;
+      4) COLOR='0;31m';;
+      5) COLOR='0;37m';;
+      6) COLOR='1;33m';;
+      *)
+        nvm_err "Invalid color index, $1"
+        return 1
+        ;;
+    esac
   fi
+  echo $COLOR
 }
 
 nvm_print_color_code() {
@@ -819,6 +836,21 @@ nvm_print_formatted_alias() {
   local VERSION_FORMAT
   local ALIAS_FORMAT
   local DEST_FORMAT
+
+  local NVM_CURRENT_COLOR
+  local NVM_INSTALLED_COLOR
+  local NVM_SYSTEM_COLOR
+  local NVM_NOT_INSTALLED_COLOR
+  local NVM_DEFAULT_COLOR
+  local NVM_LTS_COLOR
+
+  NVM_CURRENT_COLOR=$(nvm_get_colors 1)
+  NVM_INSTALLED_COLOR=$(nvm_get_colors 2)
+  NVM_SYSTEM_COLOR=$(nvm_get_colors 3)
+  NVM_NOT_INSTALLED_COLOR=$(nvm_get_colors 4)
+  NVM_DEFAULT_COLOR=$(nvm_get_colors 5)
+  NVM_LTS_COLOR=$(nvm_get_colors 6)
+
   ALIAS_FORMAT='%s'
   DEST_FORMAT='%s'
   VERSION_FORMAT='%s'
@@ -1553,6 +1585,21 @@ nvm_print_versions() {
   local NVM_CURRENT
   local NVM_LATEST_LTS_COLOR
   local NVM_OLD_LTS_COLOR
+
+  local NVM_CURRENT_COLOR
+  local NVM_INSTALLED_COLOR
+  local NVM_SYSTEM_COLOR
+  local NVM_NOT_INSTALLED_COLOR
+  local NVM_DEFAULT_COLOR
+  local NVM_LTS_COLOR
+
+  NVM_CURRENT_COLOR=$(nvm_get_colors 1)
+  NVM_INSTALLED_COLOR=$(nvm_get_colors 2)
+  NVM_SYSTEM_COLOR=$(nvm_get_colors 3)
+  NVM_NOT_INSTALLED_COLOR=$(nvm_get_colors 4)
+  NVM_DEFAULT_COLOR=$(nvm_get_colors 5)
+  NVM_LTS_COLOR=$(nvm_get_colors 6)
+
   NVM_CURRENT=$(nvm_ls_current)
   NVM_LATEST_LTS_COLOR=$(nvm_echo "${NVM_CURRENT_COLOR}" | command tr '0;' '1;')
   NVM_OLD_LTS_COLOR="${NVM_DEFAULT_COLOR}"
@@ -3498,7 +3545,7 @@ nvm() {
       local PATTERN
       local NVM_NO_COLORS
       local NVM_NO_ALIAS
-      nvm_get_colors
+
       while [ $# -gt 0 ]; do
         case "${1}" in
           --) ;;
@@ -3536,7 +3583,7 @@ nvm() {
       local NVM_LTS
       local PATTERN
       local NVM_NO_COLORS
-      nvm_get_colors
+
       while [ $# -gt 0 ]; do
         case "${1-}" in
           --) ;;
@@ -3647,8 +3694,6 @@ nvm() {
       local NVM_NO_COLORS
       ALIAS='--'
       TARGET='--'
-
-      nvm_get_colors
 
       while [ $# -gt 0 ]; do
         case "${1-}" in
