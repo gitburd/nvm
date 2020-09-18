@@ -729,12 +729,11 @@ nvm_set_colors() {
     local NOT_INSTALLED_COLOR
     local DEFAULT_COLOR
 
-    INSTALLED_COLOR="$(echo "$1" | awk '{ INSTALLED_COLOR=substr($0, 1, 1); print INSTALLED_COLOR; }')"
-    LTS_AND_SYSTEM_COLOR="$(echo "$1" | awk '{ LTS_AND_SYSTEM_COLOR=substr($0, 2, 1); print LTS_AND_SYSTEM_COLOR; }')"
-    CURRENT_COLOR="$(echo "$1" | awk '{ CURRENT_COLOR=substr($0, 3, 1); print CURRENT_COLOR; }')"
-    NOT_INSTALLED_COLOR="$(echo "$1" | awk '{ NOT_INSTALLED_COLOR=substr($0, 4, 1); print NOT_INSTALLED_COLOR; }')"
-    DEFAULT_COLOR="$(echo "$1" | awk '{ DEFAULT_COLOR=substr($0, 5, 1); print DEFAULT_COLOR; }')"
-
+    INSTALLED_COLOR="$(echo "$1" | awk '{ print substr($0, 1, 1); }')"
+    LTS_AND_SYSTEM_COLOR="$(echo "$1" | awk '{ print substr($0, 2, 1); }')"
+    CURRENT_COLOR="$(echo "$1" | awk '{ print substr($0, 3, 1); }')"
+    NOT_INSTALLED_COLOR="$(echo "$1" | awk '{ print substr($0, 4, 1); }')"
+    DEFAULT_COLOR="$(echo "$1" | awk '{ print substr($0, 5, 1); }')"
     nvm_echo_with_colors "Setting colors to: \033[$(nvm_print_color_code "${INSTALLED_COLOR}") ${INSTALLED_COLOR}\033[$(nvm_print_color_code "${LTS_AND_SYSTEM_COLOR}") ${LTS_AND_SYSTEM_COLOR}\033[$(nvm_print_color_code "${CURRENT_COLOR}") ${CURRENT_COLOR}\033[$(nvm_print_color_code "${NOT_INSTALLED_COLOR}") ${NOT_INSTALLED_COLOR}\033[$(nvm_print_color_code "${DEFAULT_COLOR}") ${DEFAULT_COLOR}\033[0m"
 
     export NVM_COLORS=$1
@@ -746,26 +745,26 @@ nvm_get_colors() {
   local SYS_COLOR
   if [ -n "${NVM_COLORS-}" ]; then
     case $1 in
-      1) COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ COLOR=substr($0, 1, 1); print COLOR; }')");;
-      2) COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ COLOR=substr($0, 2, 1); print COLOR; }')");;
-      3) COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ COLOR=substr($0, 3, 1); print COLOR; }')");;
-      4) COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ COLOR=substr($0, 4, 1); print COLOR; }')");;
-      5) COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ COLOR=substr($0, 5, 1); print COLOR; }')");;
+      1) COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ print substr($0, 1, 1); }')");;
+      2) COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ print substr($0, 2, 1); }')");;
+      3) COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ print substr($0, 3, 1); }')");;
+      4) COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ print substr($0, 4, 1); }')");;
+      5) COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ print substr($0, 5, 1); }')");;
       6)
-        SYS_COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ COLOR=substr($0, 3, 1); print COLOR; }')")
+        SYS_COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ print substr($0, 3, 1); }')")
         COLOR=$(nvm_echo "$SYS_COLOR" | command tr '0;' '1;')
         ;;
       *)
         nvm_err "Invalid color index, $1"
         return 1
-        ;;
+      ;;
     esac
   fi
   echo $COLOR
 }
 
 nvm_print_color_code() {
-  case ${1} in
+  case "${1-}" in
     r) nvm_echo '0;31m';;
     R) nvm_echo '1;31m';;
     g) nvm_echo '0;32m';;
@@ -782,32 +781,8 @@ nvm_print_color_code() {
     K) nvm_echo '1;30m';;
     e) nvm_echo '0;37m';;
     W) nvm_echo '1;37m';;
-    *) nvm_echo 'Invalid color code'; return 1;;
+    *) nvm_err 'Invalid color code'; return 1;;
   esac
-}
-
-nvm_format_help_message_colors() {
-  if [ -z "${NVM_NO_COLORS-}"  ] && nvm_has_colors; then
-    NVM_INITIAL_COLOR_INFO='\033[0;32m g\033[0m \033[0;34m b\033[0m \033[0;33m y\033[0m \033[0;31m r\033[0m \033[0;37m e\033[0m'
-    NVM_RED_INFO='\033[0;31m r\033[0m/\033[1;31mR\033[0m = \033[0;31mred\033[0m / \033[1;31mbold red\033[0m'
-    NVM_GREEN_INFO='\033[0;32m g\033[0m/\033[1;32mG\033[0m = \033[0;32mgreen\033[0m / \033[1;32mbold green\033[0m'
-    NVM_BLUE_INFO='\033[0;34m b\033[0m/\033[1;34mB\033[0m = \033[0;34mblue\033[0m / \033[1;34mbold blue\033[0m'
-    NVM_CYAN_INFO='\033[0;36m c\033[0m/\033[1;36mC\033[0m = \033[0;36mcyan\033[0m / \033[1;36mbold cyan\033[0m'
-    NVM_MAGENTA_INFO='\033[0;35m m\033[0m/\033[1;35mM\033[0m = \033[0;35mmagenta\033[0m / \033[1;35mbold magenta\033[0m'
-    NVM_YELLOW_INFO='\033[0;33m y\033[0m/\033[1;33mY\033[0m = \033[0;33myellow\033[0m / \033[1;33mbold yellow\033[0m'
-    NVM_BLACK_INFO='\033[0;30m k\033[0m/\033[1;30mK\033[0m = \033[0;30mblack\033[0m / \033[1;30mbold black\033[0m'
-    NVM_GREY_WHITE_INFO='\033[0;37m e\033[0m/\033[1;37mW\033[0m = \033[0;37mlight grey\033[0m / \033[1;37mwhite\033[0m'
-  else
-    NVM_INITIAL_COLOR_INFO='gbYre'
-    NVM_RED_INFO='r/R = red / bold red'
-    NVM_GREEN_INFO='g/G = green / bold green'
-    NVM_BLUE_INFO='b/B = blue / bold blue'
-    NVM_CYAN_INFO='c/C = cyan / bold cyan'
-    NVM_MAGENTA_INFO='m/M = magenta / bold magenta'
-    NVM_YELLOW_INFO='y/Y = yellow / bold yellow'
-    NVM_BLACK_INFO='k/K = black / bold black'
-    NVM_GREY_WHITE_INFO='e/W = light grey / white'
-  fi
 }
 
 nvm_print_formatted_alias() {
@@ -2582,13 +2557,34 @@ nvm() {
         NVM_NO_COLORS=""
         for j in "$@"
         do
-          if [ "${j}" = '--no-colors' ]
-            then
-              NVM_NO_COLORS="${j}"
-              break
+          if [ "${j}" = '--no-colors' ]; then
+            NVM_NO_COLORS="${j}"
+            break
           fi
         done
-        nvm_format_help_message_colors
+        
+        if [ -z "${NVM_NO_COLORS-}"  ] && nvm_has_colors; then
+          NVM_INITIAL_COLOR_INFO='\033[0;32m g\033[0m \033[0;34m b\033[0m \033[0;33m y\033[0m \033[0;31m r\033[0m \033[0;37m e\033[0m'
+          NVM_RED_INFO='\033[0;31m r\033[0m/\033[1;31mR\033[0m = \033[0;31mred\033[0m / \033[1;31mbold red\033[0m'
+          NVM_GREEN_INFO='\033[0;32m g\033[0m/\033[1;32mG\033[0m = \033[0;32mgreen\033[0m / \033[1;32mbold green\033[0m'
+          NVM_BLUE_INFO='\033[0;34m b\033[0m/\033[1;34mB\033[0m = \033[0;34mblue\033[0m / \033[1;34mbold blue\033[0m'
+          NVM_CYAN_INFO='\033[0;36m c\033[0m/\033[1;36mC\033[0m = \033[0;36mcyan\033[0m / \033[1;36mbold cyan\033[0m'
+          NVM_MAGENTA_INFO='\033[0;35m m\033[0m/\033[1;35mM\033[0m = \033[0;35mmagenta\033[0m / \033[1;35mbold magenta\033[0m'
+          NVM_YELLOW_INFO='\033[0;33m y\033[0m/\033[1;33mY\033[0m = \033[0;33myellow\033[0m / \033[1;33mbold yellow\033[0m'
+          NVM_BLACK_INFO='\033[0;30m k\033[0m/\033[1;30mK\033[0m = \033[0;30mblack\033[0m / \033[1;30mbold black\033[0m'
+          NVM_GREY_WHITE_INFO='\033[0;37m e\033[0m/\033[1;37mW\033[0m = \033[0;37mlight grey\033[0m / \033[1;37mwhite\033[0m'
+        else
+          NVM_INITIAL_COLOR_INFO='gbYre'
+          NVM_RED_INFO='r/R = red / bold red'
+          NVM_GREEN_INFO='g/G = green / bold green'
+          NVM_BLUE_INFO='b/B = blue / bold blue'
+          NVM_CYAN_INFO='c/C = cyan / bold cyan'
+          NVM_MAGENTA_INFO='m/M = magenta / bold magenta'
+          NVM_YELLOW_INFO='y/Y = yellow / bold yellow'
+          NVM_BLACK_INFO='k/K = black / bold black'
+          NVM_GREY_WHITE_INFO='e/W = light grey / white'
+        fi
+
         local NVM_IOJS_PREFIX
         NVM_IOJS_PREFIX="$(nvm_iojs_prefix)"
         local NVM_NODE_PREFIX
@@ -2688,7 +2684,7 @@ nvm() {
         nvm_echo '  nvm install --lts                     Install the latest LTS version'
         nvm_echo '  nvm use --lts                         Use the latest LTS version'
         nvm_echo
-        nvm_echo '  nvm set-colors cgYmW                  Set text colors to cyan, green, bold yellow, magenta and white'
+        nvm_echo '  nvm set-colors cgYmW                  Set text colors to cyan, green, bold yellow, magenta, and white'
         nvm_echo
         nvm_echo 'Note:'
         nvm_echo '  to remove, delete, or uninstall nvm - just remove the `$NVM_DIR` folder (usually `~/.nvm`)'
@@ -3942,7 +3938,7 @@ nvm() {
         >/dev/null 2>&1
     ;;
     "--set-colors")
-      if [ "${#1}" -eq 5 ] && echo "$1" | grep -E "^[:rRgGbBcCyYmMkKeW:]{1,}$" 1>/dev/null; then
+      if [ "${#1}" -eq 5 ] && nvm_echo "$1" | nvm_grep -E "^[:rRgGbBcCyYmMkKeW:]{1,}$" 1>/dev/null; then
         nvm_set_colors "$1"
       elif nvm_has_colors; then
         echo
@@ -3950,7 +3946,7 @@ nvm() {
         nvm help
         return 1
       else
-        nvm_err "Color is not supported on this system."
+        nvm_echo "Color is not supported on this system."
         echo
         nvm help --no-colors
         return 1
