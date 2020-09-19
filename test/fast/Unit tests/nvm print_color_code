@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -ex
+
+die () { echo "$@" ; cleanup ; exit 1; }
+
+\. ../../../nvm.sh
+
+# Testing valid input
+OUTPUT=$(nvm_print_color_code m)
+EXPECTED_OUTPUT='0;35m'
+[ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "nvm_print_color_code returned wrong code; got $(echo ">$OUTPUT<") expected $(echo ">$EXPECTED_OUTPUT<")"
+
+# Testing invalid input
+OUTPUT="$(nvm_print_color_code q 2>&)"
+EXPECTED_OUTPUT=$(printf %s\\n "Invalid color code")
+[ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "nvm_print_color_code did not have an error on bad input; got $(echo ">$OUTPUT<") expected $(echo ">$EXPECTED_OUTPUT<")"
