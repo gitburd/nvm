@@ -781,7 +781,9 @@ nvm_print_color_code() {
     K) nvm_echo '1;30m';;
     e) nvm_echo '0;37m';;
     W) nvm_echo '1;37m';;
-    *) nvm_err 'Invalid color code'; return 1;;
+    *) nvm_err 'Invalid color code';
+       return 1
+    ;;
   esac
 }
 
@@ -806,6 +808,7 @@ nvm_print_formatted_alias() {
   local NVM_DEFAULT_COLOR
   local NVM_LTS_COLOR
 
+# TODO: Jordan requests instead of doing the defaulting here, do inside of nvm_get_colors
   if [ -n "${NVM_COLORS-}" ]; then
     NVM_CURRENT_COLOR=$(nvm_get_colors 1)
     NVM_INSTALLED_COLOR=$(nvm_get_colors 2)
@@ -821,7 +824,7 @@ nvm_print_formatted_alias() {
     NVM_DEFAULT_COLOR='0;37m'
     NVM_LTS_COLOR='1;33m'
   fi
-
+# END TODO section and see lines 1552... for more
   ALIAS_FORMAT='%s'
   DEST_FORMAT='%s'
   VERSION_FORMAT='%s'
@@ -1563,7 +1566,14 @@ nvm_print_versions() {
   local NVM_NOT_INSTALLED_COLOR
   local NVM_DEFAULT_COLOR
   local NVM_LTS_COLOR
-
+# TODO Along with move of code to nvm_get_colors, Jordan suggests below lines would be reduced to only
+    # NVM_CURRENT_COLOR=$(nvm_get_colors 1)
+    # NVM_INSTALLED_COLOR=$(nvm_get_colors 2)
+    # NVM_SYSTEM_COLOR=$(nvm_get_colors 3)
+    # NVM_NOT_INSTALLED_COLOR=$(nvm_get_colors 4)
+    # NVM_DEFAULT_COLOR=$(nvm_get_colors 5)
+    # NVM_LTS_COLOR=$(nvm_get_colors 6)
+# TODO Remove below
   if [ -n "${NVM_COLORS-}" ]; then
     NVM_CURRENT_COLOR=$(nvm_get_colors 1)
     NVM_INSTALLED_COLOR=$(nvm_get_colors 2)
@@ -1579,7 +1589,7 @@ nvm_print_versions() {
     NVM_DEFAULT_COLOR='0;37m'
     NVM_LTS_COLOR='1;33m'
   fi
-
+# End TODO section
   NVM_CURRENT=$(nvm_ls_current)
   NVM_LATEST_LTS_COLOR=$(nvm_echo "${NVM_CURRENT_COLOR}" | command tr '0;' '1;')
   NVM_OLD_LTS_COLOR="${NVM_DEFAULT_COLOR}"
@@ -2555,8 +2565,7 @@ nvm() {
     case $i in
       '-h'|'help'|'--help')
         NVM_NO_COLORS=""
-        for j in "$@"
-        do
+        for j in "$@"; do
           if [ "${j}" = '--no-colors' ]; then
             NVM_NO_COLORS="${j}"
             break
@@ -2662,14 +2671,14 @@ nvm() {
         nvm_echo '                                               Initial colors are:'
         nvm_echo_with_colors "                                                  $NVM_INITIAL_COLOR_INFO"
         nvm_echo '                                               Color codes:'
-        nvm_echo_with_colors "                                                $NVM_RED_INFO"
-        nvm_echo_with_colors "                                                $NVM_GREEN_INFO"
-        nvm_echo_with_colors "                                                $NVM_BLUE_INFO"
-        nvm_echo_with_colors "                                                $NVM_CYAN_INFO"
-        nvm_echo_with_colors "                                                $NVM_MAGENTA_INFO"
-        nvm_echo_with_colors "                                                $NVM_YELLOW_INFO"
-        nvm_echo_with_colors "                                                $NVM_BLACK_INFO"
-        nvm_echo_with_colors "                                                $NVM_GREY_WHITE_INFO"
+        nvm_echo_with_colors "                                                {$NVM_RED_INFO}"
+        nvm_echo_with_colors "                                                {$NVM_GREEN_INFO}"
+        nvm_echo_with_colors "                                                {$NVM_BLUE_INFO}"
+        nvm_echo_with_colors "                                                {$NVM_CYAN_INFO}"
+        nvm_echo_with_colors "                                                {$NVM_MAGENTA_INFO}"
+        nvm_echo_with_colors "                                                {$NVM_YELLOW_INFO}"
+        nvm_echo_with_colors "                                                {$NVM_BLACK_INFO}"
+        nvm_echo_with_colors "                                                {$NVM_GREY_WHITE_INFO}"
         nvm_echo
         nvm_echo 'Example:'
         nvm_echo '  nvm install 8.0.0                     Install a specific version number'
@@ -3930,6 +3939,7 @@ nvm() {
         nvm_get_colors nvm_set_colors nvm_print_color_code nvm_format_help_message_colors \
         nvm_echo_with_colors nvm_err_with_colors \
         >/dev/null 2>&1
+# TODO Jordan requests to avoid all the NVM_*_INFO vars here
       unset NVM_RC_VERSION NVM_NODEJS_ORG_MIRROR NVM_IOJS_ORG_MIRROR NVM_DIR \
         NVM_CD_FLAGS NVM_BIN NVM_INC NVM_MAKE_JOBS NVM_COLORS NVM_RED_INFO NVM_GREEN_INFO \
         NVM_BLUE_INFO NVM_CYAN_INFO NVM_MAGENTA_INFO NVM_YELLOW_INFO NVM_BLACK_INFO \
@@ -3938,20 +3948,22 @@ nvm() {
         >/dev/null 2>&1
     ;;
     "--set-colors")
+#TODO Move validation code to nvm_set_colors
       if [ "${#1}" -eq 5 ] && nvm_echo "$1" | nvm_grep -E "^[:rRgGbBcCyYmMkKeW:]{1,}$" 1>/dev/null; then
         nvm_set_colors "$1"
       elif nvm_has_colors; then
-        echo
+        nvm_echo
         command printf %b\\n "Please pass in five \033[1;31mvalid color codes\033[0m. Choose from: rRgGbBcCyYmMkKeW"
         nvm help
         return 1
       else
         nvm_echo "Color is not supported on this system."
-        echo
+        nvm_echo
         nvm help --no-colors
         return 1
       fi
     ;;
+# End TODO section
     *)
       >&2 nvm --help
       return 127
