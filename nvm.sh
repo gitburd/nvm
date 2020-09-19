@@ -736,7 +736,7 @@ nvm_set_colors() {
     DEFAULT_COLOR="$(echo "$1" | awk '{ print substr($0, 5, 1); }')"
     nvm_echo_with_colors "Setting colors to: \033[$(nvm_print_color_code "${INSTALLED_COLOR}") ${INSTALLED_COLOR}\033[$(nvm_print_color_code "${LTS_AND_SYSTEM_COLOR}") ${LTS_AND_SYSTEM_COLOR}\033[$(nvm_print_color_code "${CURRENT_COLOR}") ${CURRENT_COLOR}\033[$(nvm_print_color_code "${NOT_INSTALLED_COLOR}") ${NOT_INSTALLED_COLOR}\033[$(nvm_print_color_code "${DEFAULT_COLOR}") ${DEFAULT_COLOR}\033[0m"
 
-    export "${NVM_COLORS-}"=$1
+    export NVM_COLORS="$1"
   fi
 }
 
@@ -760,7 +760,7 @@ nvm_get_colors() {
       ;;
     esac
   fi
-  echo $COLOR
+  echo "$COLOR"
 }
 
 nvm_print_color_code() {
