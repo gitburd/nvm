@@ -12,8 +12,9 @@ EXPECTED_OUTPUT='0;35m'
 [ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "nvm_print_color_code returned wrong code; got $(echo ">$OUTPUT<") expected $(echo ">$EXPECTED_OUTPUT<")"
 
 # Testing invalid input
-# OUTPUT="$(echo "$(nvm_print_color_code q 2>&1)" | awk '{ print substr($0, 1, 18) }')"
-OUTPUT="$(nvm_print_color_code q 2>&1 | awk '{ print substr($0, 1, 18) }')"
+OUTPUT="$(echo "$(nvm_print_color_code q 2>&1)" | awk '{ print substr($0, 1, 18) }')"
+# OUTPUT="$(nvm_print_color_code q 2>&1 | awk '{ print substr($0, 1, 18) }')"
+# OUTPUT="$(nvm_print_color_code q 1>&2)"
 echo "OUTPUT WAS SET TO: $OUTPUT"
 EXPECTED_OUTPUT="Invalid color code"
 [ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "nvm_print_color_code did not have the expected error on bad input; got $(echo ">$OUTPUT<") expected $(echo ">$EXPECTED_OUTPUT<")"
