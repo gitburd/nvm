@@ -773,10 +773,11 @@ nvm_get_colors() {
       ;;
     esac
   else
+
     case $1 in
-      1) COLOR='0;32m';;
-      2) COLOR='0;34m';;
-      3) COLOR='0;33m';;
+      1) COLOR='0;34m';;
+      2) COLOR='0;33m';;
+      3) COLOR='0;32m';;
       4) COLOR='0;31m';;
       5) COLOR='0;37m';;
       6) COLOR='1;33m';;
@@ -828,16 +829,16 @@ nvm_print_formatted_alias() {
   local ALIAS_FORMAT
   local DEST_FORMAT
 
-  local CURRENT_COLOR
   local INSTALLED_COLOR
   local SYSTEM_COLOR
+  local CURRENT_COLOR
   local NOT_INSTALLED_COLOR
   local DEFAULT_COLOR
   local LTS_COLOR
 
-  CURRENT_COLOR=$(nvm_get_colors 1)
-  INSTALLED_COLOR=$(nvm_get_colors 2)
-  SYSTEM_COLOR=$(nvm_get_colors 3)
+  INSTALLED_COLOR=$(nvm_get_colors 1)
+  SYSTEM_COLOR=$(nvm_get_colors 2)
+  CURRENT_COLOR=$(nvm_get_colors 3)
   NOT_INSTALLED_COLOR=$(nvm_get_colors 4)
   DEFAULT_COLOR=$(nvm_get_colors 5)
   LTS_COLOR=$(nvm_get_colors 6)
@@ -1577,16 +1578,16 @@ nvm_print_versions() {
   local NVM_LATEST_LTS_COLOR
   local NVM_OLD_LTS_COLOR
 
-  local CURRENT_COLOR
   local INSTALLED_COLOR
   local SYSTEM_COLOR
+  local CURRENT_COLOR
   local NOT_INSTALLED_COLOR
   local DEFAULT_COLOR
   local LTS_COLOR
 
-  CURRENT_COLOR=$(nvm_get_colors 1)
-  INSTALLED_COLOR=$(nvm_get_colors 2)
-  SYSTEM_COLOR=$(nvm_get_colors 3)
+  INSTALLED_COLOR=$(nvm_get_colors 1)
+  SYSTEM_COLOR=$(nvm_get_colors 2)
+  CURRENT_COLOR=$(nvm_get_colors 3)
   NOT_INSTALLED_COLOR=$(nvm_get_colors 4)
   DEFAULT_COLOR=$(nvm_get_colors 5)
   LTS_COLOR=$(nvm_get_colors 6)

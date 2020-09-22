@@ -6,22 +6,29 @@ die () { echo "$@" ; cleanup ; exit 1; }
 
 cleanup() {
   unset NVM_COLORS
+  if [ -n TEMP_NVM_COLORS ]; then
+    NVM_COLORS=TEMP_NVM_COLORS
+  fi
 }
 
 \. ../../../nvm.sh
+if [ -n ${NVM_COLORS} ]; then
+  TEMP_NVM_COLORS=NVM_COLORS
+  unset NVM_COLORS
+fi
 
 # NVM_COLORS is not set
 OUTPUT=$(nvm_get_colors 1)
-EXPECTED_OUTPUT='0;32m'
-[ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "nvm_get_colors failed to return default color (CURRENT_COLOR); got >${OUTPUT}< expected >${EXPECTED_OUTPUT}<"
-
-OUTPUT=$(nvm_get_colors 2)
 EXPECTED_OUTPUT='0;34m'
 [ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "nvm_get_colors failed to return default color (INSTALLED_COLOR); got >${OUTPUT}< expected >${EXPECTED_OUTPUT}<"
 
-OUTPUT=$(nvm_get_colors 3)
+OUTPUT=$(nvm_get_colors 2)
 EXPECTED_OUTPUT='0;33m'
 [ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "nvm_get_colors failed to return default color (SYSTEM_COLOR); got >${OUTPUT}< expected >${EXPECTED_OUTPUT}<"
+
+OUTPUT=$(nvm_get_colors 3)
+EXPECTED_OUTPUT='0;32m'
+[ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "nvm_get_colors failed to return default color (INSTALLED_COLOR); got >${OUTPUT}< expected >${EXPECTED_OUTPUT}<"
 
 OUTPUT=$(nvm_get_colors 4)
 EXPECTED_OUTPUT='0;31m'
@@ -46,15 +53,15 @@ EXPECTED_OUTPUT="Invalid color index, bad"
 nvm --set-colors rgbyc
 OUTPUT=$(nvm_get_colors 1)
 EXPECTED_OUTPUT='0;31m'
-[ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "nvm_get_colors failed to return default color (CURRENT_COLOR); got >${OUTPUT}< expected >${EXPECTED_OUTPUT}<"
+[ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "nvm_get_colors failed to return default color (INSTALLED_COLOR); got >${OUTPUT}< expected >${EXPECTED_OUTPUT}<"
 
 OUTPUT=$(nvm_get_colors 2)
 EXPECTED_OUTPUT='0;32m'
-[ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "nvm_get_colors failed to return default color (INSTALLED_COLOR); got >${OUTPUT}< expected >${EXPECTED_OUTPUT}<"
+[ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "nvm_get_colors failed to return default color (SYSTEM_COLOR); got >${OUTPUT}< expected >${EXPECTED_OUTPUT}<"
 
 OUTPUT=$(nvm_get_colors 3)
 EXPECTED_OUTPUT='0;34m'
-[ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "nvm_get_colors failed to return default color (SYSTEM_COLOR); got >${OUTPUT}< expected >${EXPECTED_OUTPUT}<"
+[ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "nvm_get_colors failed to return default color (CURRENT_COLOR); got >${OUTPUT}< expected >${EXPECTED_OUTPUT}<"
 
 OUTPUT=$(nvm_get_colors 4)
 EXPECTED_OUTPUT='0;33m'
@@ -67,5 +74,6 @@ EXPECTED_OUTPUT='0;36m'
 OUTPUT=$(nvm_get_colors 6)
 EXPECTED_OUTPUT='1;34m'
 [ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "nvm_get_colors failed to return default color (LTS_COLOR); got >${OUTPUT}< expected >${EXPECTED_OUTPUT}<"
+
 
 cleanup
