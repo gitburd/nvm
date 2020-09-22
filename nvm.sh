@@ -742,7 +742,7 @@ nvm_set_colors() {
   elif nvm_has_colors; then
     nvm help
     nvm_echo
-    nvm_err "Please pass in five \033[1;31mvalid color codes\033[0m. Choose from: rRgGbBcCyYmMkKeW"
+    nvm_err_with_colors "\033[1;37mPlease pass in five \033[1;31mvalid color codes\033[1;37m. Choose from: rRgGbBcCyYmMkKeW\033[0m"
     return 1
   else
     nvm help --no-colors
@@ -750,7 +750,6 @@ nvm_set_colors() {
     nvm_echo "Color is not supported on this system."
     return 1
   fi
-
 }
 
 nvm_get_colors() {
@@ -764,7 +763,7 @@ nvm_get_colors() {
       4) COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ print substr($0, 4, 1); }')");;
       5) COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ print substr($0, 5, 1); }')");;
       6)
-        SYS_COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ print substr($0, 3, 1); }')")
+        SYS_COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ print substr($0, 2, 1); }')")
         COLOR=$(nvm_echo "$SYS_COLOR" | command tr '0;' '1;')
         ;;
       *)
@@ -773,7 +772,6 @@ nvm_get_colors() {
       ;;
     esac
   else
-
     case $1 in
       1) COLOR='0;34m';;
       2) COLOR='0;33m';;

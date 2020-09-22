@@ -28,7 +28,7 @@ EXPECTED_OUTPUT='0;33m'
 
 OUTPUT=$(nvm_get_colors 3)
 EXPECTED_OUTPUT='0;32m'
-[ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "nvm_get_colors failed to return default color (INSTALLED_COLOR); got >${OUTPUT}< expected >${EXPECTED_OUTPUT}<"
+[ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "nvm_get_colors failed to return default color (CURRENT_COLOR); got >${OUTPUT}< expected >${EXPECTED_OUTPUT}<"
 
 OUTPUT=$(nvm_get_colors 4)
 EXPECTED_OUTPUT='0;31m'
@@ -47,7 +47,7 @@ set +ex # needed for stderr
 OUTPUT=$(nvm_get_colors bad 2>&1)
 set -ex
 EXPECTED_OUTPUT="Invalid color index, bad"
-[ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "nvm_get_colors failed to return default color (CURRENT_COLOR); got >${OUTPUT}< expected >${EXPECTED_OUTPUT}<"
+[ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "nvm_get_colors did not have an error with bad output; got >${OUTPUT}< expected >${EXPECTED_OUTPUT}<"
 
 # NVM_COLORS is set
 nvm --set-colors rgbyc
@@ -72,8 +72,7 @@ EXPECTED_OUTPUT='0;36m'
 [ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "nvm_get_colors failed to return default color (DEFAULT_COLOR); got >${OUTPUT}< expected >${EXPECTED_OUTPUT}<"
 
 OUTPUT=$(nvm_get_colors 6)
-EXPECTED_OUTPUT='1;34m'
+EXPECTED_OUTPUT='1;32m'
 [ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "nvm_get_colors failed to return default color (LTS_COLOR); got >${OUTPUT}< expected >${EXPECTED_OUTPUT}<"
-
 
 cleanup
