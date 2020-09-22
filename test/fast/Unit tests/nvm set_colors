@@ -17,13 +17,17 @@ EXPECTED_OUTPUT="rgbyc"
 [ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "NVM_SET_COLORS failed with valid input; got >${OUTPUT}< expected >${EXPECTED_OUTPUT}<"
 
 # test invalid 4 colors
-OUTPUT="$(echo $(nvm --set-colors rgby) | awk '{ OUTPUT=substr($0, 1, 19); print OUTPUT; }')"
-EXPECTED_OUTPUT="Please pass in five"
+OUTPUT="$(echo $(nvm --set-colors rgby) | awk '{ OUTPUT=substr($0, 1, 20); print OUTPUT; }')"
+EXPECTED_OUTPUT="Node Version Manager"
 [ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "NVM_SET_COLORS did not fail with invalid input; got >${OUTPUT}, < expected >${EXPECTED_OUTPUT}<"
 
 # test invalid color codes
-OUTPUT="$(echo $(nvm --set-colors p3gq7) | awk '{ OUTPUT=substr($0, 1, 19); print OUTPUT; }')"
-EXPECTED_OUTPUT="Please pass in five"
+OUTPUT="$(echo $(nvm --set-colors p3gq7) | awk '{ OUTPUT=substr($0, 1, 20); print OUTPUT; }')"
+EXPECTED_OUTPUT="Node Version Manager"
 [ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "NVM_SET_COLORS did not fail with invalid input; got >${OUTPUT}<, expected >${EXPECTED_OUTPUT}<"
+
+# OUTPUT="$(nvm_has_colors=false; nvm --set-colors rgbyc)"
+# EXPECTED_OUTPUT="Color is not supported on this system."
+# [ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "NVM_SET_COLORS did not fail with invalid input; got >${OUTPUT}<, expected >${EXPECTED_OUTPUT}<"
 
 cleanup
