@@ -722,7 +722,7 @@ nvm_binary_available() {
 }
 
 nvm_set_colors() {
-  if [ "${#1}" -eq 5 ] && nvm_echo "$1" | nvm_grep -E "^[:rRgGbBcCyYmMkKeW:]{1,}$" 1>/dev/null; then
+  if [ "${#1}" -eq 5 ] && nvm_echo "$1" | nvm_grep -E "^[rRgGbBcCyYmMkKeW]{1,}$" 1>/dev/null; then
     if nvm_has_colors; then
       local INSTALLED_COLOR
       local LTS_AND_SYSTEM_COLOR

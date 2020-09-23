@@ -12,12 +12,12 @@ cleanup() {
 }
 
 \. ../../../nvm.sh
+
+# NVM_COLORS is not set
 if [ -n ${NVM_COLORS} ]; then
   TEMP_NVM_COLORS=NVM_COLORS
   unset NVM_COLORS
 fi
-
-# NVM_COLORS is not set
 OUTPUT=$(nvm_get_colors 1)
 EXPECTED_OUTPUT='0;34m'
 [ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "nvm_get_colors failed to return default color (INSTALLED_COLOR); got >${OUTPUT}< expected >${EXPECTED_OUTPUT}<"
