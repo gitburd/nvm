@@ -767,7 +767,7 @@ nvm_get_colors() {
         COLOR=$(nvm_echo "$SYS_COLOR" | command tr '0;' '1;')
         ;;
       *)
-        nvm_err "Invalid color index, $1"
+        nvm_err "Invalid color index, ${1-}"
         return 1
       ;;
     esac
@@ -780,7 +780,7 @@ nvm_get_colors() {
       5) COLOR='0;37m';;
       6) COLOR='1;33m';;
       *)
-        nvm_err "Invalid color index, $1"
+        nvm_err "Invalid color index, ${1-}"
         return 1
       ;;
     esac
