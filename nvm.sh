@@ -808,7 +808,7 @@ nvm_print_color_code() {
     e) nvm_echo '0;37m';;
     W) nvm_echo '1;37m';;
     *) nvm_err 'Invalid color code';
-      return 1
+       return 1
     ;;
   esac
 }
@@ -3955,8 +3955,8 @@ nvm() {
         CURRENT_COLOR NOT_INSTALLED_COLOR DEFAULT_COLOR LTS_COLOR \
         >/dev/null 2>&1
     ;;
-    "--set-colors")
-    nvm_set_colors "$1"
+    "set-colors")
+      nvm_set_colors "${1-}"
     ;;
     *)
       >&2 nvm --help
