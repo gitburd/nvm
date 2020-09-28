@@ -722,33 +722,25 @@ nvm_binary_available() {
 }
 
 nvm_set_colors() {
-  if nvm_has_colors; then
-    if [ "${#1}" -eq 5 ] && nvm_echo "$1" | nvm_grep -E "^[rRgGbBcCyYmMkKeW]{1,}$" 1>/dev/null; then
-      local INSTALLED_COLOR
-      local LTS_AND_SYSTEM_COLOR
-      local CURRENT_COLOR
-      local NOT_INSTALLED_COLOR
-      local DEFAULT_COLOR
+  if ! nvm_has_colors; then
+    return 19
+  elif [ "${#1}" -eq 5 ] && nvm_echo "$1" | nvm_grep -E "^[rRgGbBcCyYmMkKeW]{1,}$" 1>/dev/null; then
+    local INSTALLED_COLOR
+    local LTS_AND_SYSTEM_COLOR
+    local CURRENT_COLOR
+    local NOT_INSTALLED_COLOR
+    local DEFAULT_COLOR
 
-      INSTALLED_COLOR="$(echo "$1" | awk '{ print substr($0, 1, 1); }')"
-      LTS_AND_SYSTEM_COLOR="$(echo "$1" | awk '{ print substr($0, 2, 1); }')"
-      CURRENT_COLOR="$(echo "$1" | awk '{ print substr($0, 3, 1); }')"
-      NOT_INSTALLED_COLOR="$(echo "$1" | awk '{ print substr($0, 4, 1); }')"
-      DEFAULT_COLOR="$(echo "$1" | awk '{ print substr($0, 5, 1); }')"
-      nvm_echo_with_colors "Setting colors to: \033[$(nvm_print_color_code "${INSTALLED_COLOR}") ${INSTALLED_COLOR}\033[$(nvm_print_color_code "${LTS_AND_SYSTEM_COLOR}") ${LTS_AND_SYSTEM_COLOR}\033[$(nvm_print_color_code "${CURRENT_COLOR}") ${CURRENT_COLOR}\033[$(nvm_print_color_code "${NOT_INSTALLED_COLOR}") ${NOT_INSTALLED_COLOR}\033[$(nvm_print_color_code "${DEFAULT_COLOR}") ${DEFAULT_COLOR}\033[0m"
+    INSTALLED_COLOR="$(echo "$1" | awk '{ print substr($0, 1, 1); }')"
+    LTS_AND_SYSTEM_COLOR="$(echo "$1" | awk '{ print substr($0, 2, 1); }')"
+    CURRENT_COLOR="$(echo "$1" | awk '{ print substr($0, 3, 1); }')"
+    NOT_INSTALLED_COLOR="$(echo "$1" | awk '{ print substr($0, 4, 1); }')"
+    DEFAULT_COLOR="$(echo "$1" | awk '{ print substr($0, 5, 1); }')"
+    nvm_echo_with_colors "Setting colors to: \033[$(nvm_print_color_code "${INSTALLED_COLOR}") ${INSTALLED_COLOR}\033[$(nvm_print_color_code "${LTS_AND_SYSTEM_COLOR}") ${LTS_AND_SYSTEM_COLOR}\033[$(nvm_print_color_code "${CURRENT_COLOR}") ${CURRENT_COLOR}\033[$(nvm_print_color_code "${NOT_INSTALLED_COLOR}") ${NOT_INSTALLED_COLOR}\033[$(nvm_print_color_code "${DEFAULT_COLOR}") ${DEFAULT_COLOR}\033[0m"
 
-      export NVM_COLORS="$1"
-    else
-      nvm help
-      nvm_echo
-      nvm_err_with_colors "\033[1;37mPlease pass in five \033[1;31mvalid color codes\033[1;37m. Choose from: rRgGbBcCyYmMkKeW\033[0m"
-      return 1
-    fi
+    export NVM_COLORS="$1"
   else
-    nvm help --no-colors
-    nvm_echo
-    nvm_err "Color is not supported on this system."
-    return 1
+    return 17
   fi
 }
 
@@ -3956,7 +3948,18 @@ nvm() {
         >/dev/null 2>&1
     ;;
     "set-colors")
+      local EXIT_CODE
       nvm_set_colors "${1-}"
+      EXIT_CODE=$?
+      if [ "$EXIT_CODE" -eq 19 ]; then
+        >&2 nvm --help --no-colors
+        nvm_echo
+        nvm_err "Color is not supported on this system."
+      elif [ "$EXIT_CODE" -eq 17 ]; then
+        >&2 nvm --help
+        nvm_echo
+        nvm_err_with_colors "\033[1;37mPlease pass in five \033[1;31mvalid color codes\033[1;37m. Choose from: rRgGbBcCyYmMkKeW\033[0m"
+      fi
     ;;
     *)
       >&2 nvm --help
