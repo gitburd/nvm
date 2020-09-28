@@ -50,7 +50,7 @@ EXPECTED_OUTPUT="Invalid color index, bad"
 [ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "nvm_get_colors did not have an error with bad output; got >${OUTPUT}< expected >${EXPECTED_OUTPUT}<"
 
 # NVM_COLORS is set
-nvm --set-colors rgbyc
+nvm set-colors rgbyc
 OUTPUT=$(nvm_get_colors 1)
 EXPECTED_OUTPUT='0;31m'
 [ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "nvm_get_colors failed to return default color (INSTALLED_COLOR); got >${OUTPUT}< expected >${EXPECTED_OUTPUT}<"

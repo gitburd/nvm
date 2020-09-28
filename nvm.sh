@@ -808,7 +808,7 @@ nvm_print_color_code() {
     e) nvm_echo '0;37m';;
     W) nvm_echo '1;37m';;
     *) nvm_err 'Invalid color code';
-       return 1
+        return 1
     ;;
   esac
 }
