@@ -2,19 +2,19 @@
 
 \. ../../../nvm.sh
 
-die () { 
+die () {
   # echo "$@" ;
   echo "Expected >${EXPECTED_OUTPUT}<; got >${OUTPUT}<"
-  exit 1 
+  exit 1
 }
 
 set -e
 nvm set-colors ggggg
 OUTPUT=$(echo $(nvm_print_formatted_alias fakealias fakedest) | awk '{ print substr($0, 1, 21); }')
 
-# # # expecting in red and two grays: 
+# # # expecting in red and two grays:
 EXPECTED_OUTPUT="$(command printf %b "\033[0;32mfakealias\033[0m ")"
-[ "${OUTPUT}" = "${EXPECTED_OUTPUT}" ] || die 
+[ "${OUTPUT}" = "${EXPECTED_OUTPUT}" ] || die
 
 # expecting in one color: fakealias -> fakedest (-> N/A)
 
