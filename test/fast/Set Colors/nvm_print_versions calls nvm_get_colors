@@ -1,0 +1,40 @@
+#!/bin/sh
+
+\. ../../../nvm.sh
+
+die () {
+  # echo "$@" ;
+  echo "Expected >${EXPECTED_OUTPUT}<; got >${OUTPUT}<"
+  exit 1
+}
+
+set -e
+
+# default system color
+OUTPUT=$(nvm_print_versions system)
+FORMAT="\033[0;33m%15s\033[0m"
+VERSION='system'
+EXPECTED_OUTPUT=$(command printf -- "${FORMAT}\\n" "${VERSION}")
+
+[ "${OUTPUT}" = "${EXPECTED_OUTPUT}" ] || die
+
+nvm_ls_current() { echo "current"}
+
+# default current color
+OUTPUT=$(nvm_print_versions current)
+FORMAT="\033[0;32m-> %12s\033[0m"
+VERSION='current'
+EXPECTED_OUTPUT=$(command printf -- "${FORMAT}\\n" "${VERSION}")
+
+[ "${OUTPUT}" = "${EXPECTED_OUTPUT}" ] || die
+
+# custom current color
+nvm set-colors YCMGR
+OUTPUT=$(nvm_print_versions current)
+FORMAT="\033[1;35m-> %12s\033[0m"
+VERSION='current'
+EXPECTED_OUTPUT=$(command printf -- "${FORMAT}\\n" "${VERSION}")
+
+[ "${OUTPUT}" = "${EXPECTED_OUTPUT}" ] || die
+
+set +e
