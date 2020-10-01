@@ -7,7 +7,7 @@ die () { echo "$@" ; cleanup ; exit 1; }
 cleanup() {
   unset NVM_COLORS
   if [ -n TEMP_NVM_COLORS ]; then
-    NVM_COLORS=TEMP_NVM_COLORS
+    export NVM_COLORS=TEMP_NVM_COLORS
   fi
 }
 
@@ -15,7 +15,7 @@ cleanup() {
 
 # NVM_COLORS is not set
 if [ -n ${NVM_COLORS} ]; then
-  TEMP_NVM_COLORS=NVM_COLORS
+  export TEMP_NVM_COLORS=NVM_COLORS
   unset NVM_COLORS
 fi
 OUTPUT=$(nvm_get_colors 1)
