@@ -2,13 +2,23 @@
 
 \. ../../../nvm.sh
 
+set -e
+
 die () {
   # echo "$@" ;
   echo "Expected >${EXPECTED_OUTPUT}<; got >${OUTPUT}<"
   exit 1
 }
+cleanup() {
+  if [ -n TEMP_NVM_COLORS ]; then
+    export NVM_COLORS=TEMP_NVM_COLORS
+  fi
+}
 
-set -e
+if [ -n ${NVM_COLORS} ]; then
+  export TEMP_NVM_COLORS=NVM_COLORS
+  unset NVM_COLORS
+fi
 
 # default system color
 OUTPUT=$(nvm_print_versions system)
@@ -37,4 +47,4 @@ EXPECTED_OUTPUT=$(command printf -- "${FORMAT}\\n" "${VERSION}")
 
 [ "${OUTPUT}" = "${EXPECTED_OUTPUT}" ] || die
 
-set +e
+cleanup
