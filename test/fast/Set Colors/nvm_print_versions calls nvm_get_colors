@@ -21,8 +21,9 @@ if [ -n ${NVM_COLORS} ]; then
 fi
 
 # default system color
+nvm use system
 OUTPUT=$(nvm_print_versions system)
-FORMAT="\033[0;33m%15s\033[0m"
+FORMAT="\033[0;32m-> %12s\033[0m"
 VERSION='system'
 EXPECTED_OUTPUT=$(command printf -- "${FORMAT}\\n" "${VERSION}")
 
