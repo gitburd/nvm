@@ -9,6 +9,7 @@ cleanup() {
   if [ -n TEMP_NVM_COLORS ]; then
     export NVM_COLORS=TEMP_NVM_COLORS
   fi
+  unset TEMP_NVM_COLORS
 }
 
 \. ../../../nvm.sh
