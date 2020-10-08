@@ -7,9 +7,18 @@ die () { echo "$@" ; cleanup ; exit 1; }
 cleanup() {
   unset NVM_COLORS
   unset -f nvm_has_colors
+  if [ -n TEMP_NVM_COLORS ]; then
+    export NVM_COLORS=TEMP_NVM_COLORS
+  fi
+  unset TEMP_NVM_COLORS
 }
 
 \. ../../../nvm.sh
+# NVM_COLORS is not set
+if [ -n ${NVM_COLORS} ]; then
+  export TEMP_NVM_COLORS=NVM_COLORS
+  unset NVM_COLORS
+fi
 
 # test valid setting colors/
 nvm set-colors rgbyc
