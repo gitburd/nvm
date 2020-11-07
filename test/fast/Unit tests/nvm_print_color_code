@@ -17,4 +17,4 @@ OUTPUT="$(nvm_print_color_code q 2>&1)"
 set -ex
 echo "OUTPUT WAS SET TO: $OUTPUT"
 EXPECTED_OUTPUT="Invalid color code"
-[ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "HEY; got $(echo ">$OUTPUT<") expected $(echo ">$EXPECTED_OUTPUT<")"
+[ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "nvm_print_color_code did not recognize the invalid input; got $(echo ">$OUTPUT<") expected $(echo ">$EXPECTED_OUTPUT<")"
