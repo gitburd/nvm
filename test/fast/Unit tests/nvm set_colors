@@ -44,9 +44,9 @@ set -ex
 #test system does not support at least 8 colors
 nvm_has_colors() { return 1; }
 set +ex
-OUTPUT="$(echo $(nvm set-colors mcyGb 2>&1) | awk '{ print substr($0, length($0)-37, 38); }')"
+OUTPUT="$(echo $(nvm set-colors mcyGb 2>&1) | awk '{ print substr($0, length($0)-76, 77); }')"
 set -ex
-EXPECTED_OUTPUT="Color is not supported on this system."
+EXPECTED_OUTPUT="WARNING: Colors may not display because they are not supported in this shell."
 [ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "NVM_SET_COLORS did not recognize lack of color support; got >${OUTPUT}<, expected >${EXPECTED_OUTPUT}<"
 
 cleanup
