@@ -740,7 +740,7 @@ nvm_set_colors() {
     else
       nvm_echo_with_colors "Setting colors to: \033[$(nvm_print_color_code "${INSTALLED_COLOR}") ${INSTALLED_COLOR}\033[$(nvm_print_color_code "${LTS_AND_SYSTEM_COLOR}") ${LTS_AND_SYSTEM_COLOR}\033[$(nvm_print_color_code "${CURRENT_COLOR}") ${CURRENT_COLOR}\033[$(nvm_print_color_code "${NOT_INSTALLED_COLOR}") ${NOT_INSTALLED_COLOR}\033[$(nvm_print_color_code "${DEFAULT_COLOR}") ${DEFAULT_COLOR}\033[0m"
     fi
-    export NVM_COLORS="$1"
+    # export NVM_COLORS="$1"
   else
     return 17
   fi
@@ -749,6 +749,12 @@ nvm_set_colors() {
 nvm_get_colors() {
   local COLOR
   local SYS_COLOR
+
+  # if [ -z "${NVM_COLORS-}" ]; then
+  #   source colorconfig
+  #   export $NVM_COLORS
+  # fi
+  
   if [ -n "${NVM_COLORS-}" ]; then
     case $1 in
       1) COLOR=$(nvm_print_color_code "$(echo "$NVM_COLORS" | awk '{ print substr($0, 1, 1); }')");;
