@@ -1,0 +1,21 @@
+#!/bin/sh
+
+die () { echo "$@" ; exit 1; }
+
+\. ../../nvm.sh || die 'sourcing returned nonzero exit code'
+
+if [ -n "${ZSH_VERSION-}" ]; then
+  # these are set by omz: https://github.com/ohmyzsh/ohmyzsh/tree/1ac40cd4456230f09bf0258b173304929d118992/plugins/common-aliases
+  alias -g R='| less -S'
+  alias -g G='| less -S'
+fi
+
+OUTPUT=$(\. ../../nvm.sh || echo 'sourcing returned nonzero exit code')
+
+EXPECTED_OUTPUT="sourcing returned nonzero exit code"
+[ "_$OUTPUT" = "_$EXPECTED_OUTPUT" ] || die "Sourcing nvm.sh should return nonzero exit code"
+
+if [ -n "${ZSH_VERSION-}" ]; then
+  unalias -g R
+  unalias -g G
+fi

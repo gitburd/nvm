@@ -7,13 +7,14 @@ rm -rf ../../v0.10.7
 rm -rf ../../v0.9.7
 rm -rf ../../v0.9.12
 
-if [ -n "${ZSH_VERSION-}" ]; then
-  # these are set by omz: https://github.com/ohmyzsh/ohmyzsh/tree/1ac40cd4456230f09bf0258b173304929d118992/plugins/common-aliases
-  alias -g R='| less -S'
-  alias -g G='| less -S'
-fi
-
 set -e
+
+# if [ -n "${ZSH_VERSION-}" ]; then
+#   # these are set by omz: https://github.com/ohmyzsh/ohmyzsh/tree/1ac40cd4456230f09bf0258b173304929d118992/plugins/common-aliases
+#   alias -g R='| less -S'
+#   alias -g G='| less -S'
+#   printf "hey!!!!! $R, $G"
+# fi
 
 (
   \. ../../nvm.sh || echo >&2 'sourcing nvm.sh failed'
@@ -23,7 +24,7 @@ set -e
   nvm unload || echo >&2 'nvm unload failed'
 )
 
-if [ -n "${ZSH_VERSION-}" ]; then
-  unalias -g R
-  unalias -g G
-fi
+# if [ -n "${ZSH_VERSION-}" ]; then
+#   unalias -g R
+#   unalias -g G
+# fi
