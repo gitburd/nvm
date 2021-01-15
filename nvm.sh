@@ -2338,7 +2338,8 @@ nvm_die_on_prefix() {
 
   # npm first looks at $PREFIX (case-sensitive)
   # we do not bother to test the value here; if this env var is set, unset it to continue.
-  if [ -n "${PREFIX-}" ]; then
+  # however, `npm exec` in npm v7.2+ sets $PREFIX; if set, inherit it
+  if [ -n "${PREFIX-}" ] && [ "$(nvm_version_path "$(node -v)")" != "${PREFIX}" ]; then
     nvm deactivate >/dev/null 2>&1
     nvm_err "nvm is not compatible with the \"PREFIX\" environment variable: currently set to \"${PREFIX}\""
     nvm_err 'Run `unset PREFIX` to unset it.'
@@ -2554,6 +2555,7 @@ nvm() {
     return $?
   fi
 
+  local i
   for i in "$@"
   do
     case $i in
@@ -3929,7 +3931,7 @@ nvm() {
         nvm_has_system_node nvm_has_system_iojs \
         nvm_download nvm_get_latest nvm_has nvm_install_default_packages nvm_get_default_packages \
         nvm_curl_use_compression nvm_curl_version \
-        nvm_supports_source_options nvm_auto nvm_supports_xz \
+        nvm_auto nvm_supports_xz \
         nvm_echo nvm_err nvm_grep nvm_cd \
         nvm_die_on_prefix nvm_get_make_jobs nvm_get_minor_version \
         nvm_has_solaris_binary nvm_is_merged_node_version \
@@ -4009,14 +4011,6 @@ nvm_install_default_packages() {
     nvm_err "Failed installing default packages. Please check if your default-packages file or a package in it has problems!"
     return 1
   fi
-}
-
-nvm_supports_source_options() {
-  # shellcheck disable=SC1091,SC2240
-    [ "_$( . /dev/stdin yes 2> /dev/null <<'EOF'
-[ $# -gt 0 ] && nvm_echo $1
-EOF
-  )" = "_yes" ]
 }
 
 nvm_supports_xz() {
@@ -4106,15 +4100,13 @@ nvm_auto() {
 nvm_process_parameters() {
   local NVM_AUTO_MODE
   NVM_AUTO_MODE='use'
-  if nvm_supports_source_options; then
-    while [ $# -ne 0 ]; do
-      case "$1" in
-        --install) NVM_AUTO_MODE='install' ;;
-        --no-use) NVM_AUTO_MODE='none' ;;
-      esac
-      shift
-    done
-  fi
+  while [ $# -ne 0 ]; do
+    case "$1" in
+      --install) NVM_AUTO_MODE='install' ;;
+      --no-use) NVM_AUTO_MODE='none' ;;
+    esac
+    shift
+  done
   nvm_auto "${NVM_AUTO_MODE}"
 }
 
