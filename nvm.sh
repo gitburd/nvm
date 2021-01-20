@@ -12,6 +12,11 @@
 
 NVM_SCRIPT_SOURCE="$_"
 
+if [ -n "${ZSH_VERSION-}" ]; then
+  setopt no_aliases
+  setopt
+fi
+
 nvm_is_zsh() {
   [ -n "${ZSH_VERSION-}" ]
 }
